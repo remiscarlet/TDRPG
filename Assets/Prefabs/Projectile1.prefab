@@ -110,6 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootForce: 50
+  projectileDamage: 10
 --- !u!54 &1368012479
 Rigidbody:
   m_ObjectHideFlags: 0

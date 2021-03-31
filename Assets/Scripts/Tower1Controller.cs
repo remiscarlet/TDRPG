@@ -41,7 +41,7 @@ public class Tower1Controller : MonoBehaviour
     public float maxDistance = 25.0f;
     private GameObject? GetClosestEnemyInRange() {
         List<GameObject> enemiesInRange = new List<GameObject>();
-        print(gameController);
+        //print(gameController);
         List<GameObject> enemiesAlive = gameController.GetAliveEnemies();
         enemiesInRange = (from enemy in enemiesAlive
                          where Vector3.Distance(enemy.transform.position, transform.position) < maxDistance
@@ -49,7 +49,7 @@ public class Tower1Controller : MonoBehaviour
                          .ToList();
 
         if (enemiesInRange.Count == 0) {
-            print("Found no enemies in range");
+            //print("Found no enemies in range");
             return null;
         }
 
@@ -75,10 +75,10 @@ public class Tower1Controller : MonoBehaviour
         //float angleToTarget = Vector3.Angle(towerHead.transform.position, closestEnemy.transform.position);
         float angleToTarget = Vector3.Angle(towerHead.transform.forward, GetTargetDirection(closestEnemy));
         if (angleToTarget < maxAngleDeltaToShootFrom) {
-            print("Shooting at target");
+            //print("Shooting at target");
             Shoot(closestEnemy);
         } else {
-            print($"Not shooting: Angle too far. Angle is: {angleToTarget}");
+            //print($"Not shooting: Angle too far. Angle is: {angleToTarget}");
         }
     }
 

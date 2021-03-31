@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour {
     public float shootForce;
+    public float projectileDamage = 25.0f;
     private Rigidbody projectileRb;
     // Start is called before the first frame update
     void Start() {
@@ -16,7 +17,19 @@ public class ProjectileController : MonoBehaviour {
     }
 
     void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.CompareTag("Ground")) {
+        // C# why do you not allow fallthrough switch statements :(
+        //print("Detected projectile collision");
+        GameObject gameObj = collision.gameObject;
+
+        if (gameObj.CompareTag("Enemy")) {
+            EnemyController enemyController = gameObj.GetComponent<EnemyController>();
+            
+            if (enemyController.IsAlive()) {
+                enemyController.InflictDamage(projectileDamage);
+            }
+        }
+
+        if (gameObj.CompareTag("Enemy") || gameObj.CompareTag("Ground")) {
             Destroy(gameObject);
         }
     }   

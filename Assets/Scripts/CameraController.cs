@@ -25,8 +25,11 @@ public class CameraController : MonoBehaviour {
         transform.Rotate(-1 * rotateVertical * sensitivity, 0.0f, 0.0f);
         
         // This is ugly. Precompute? Uglier?
-        var eulerAngle = transform.rotation.eulerAngles;
-        if (eulerAngle.x < botRotBound || eulerAngle.x > topRotBound) {
+        float xRotationAngle = transform.rotation.eulerAngles.x;
+        if (xRotationAngle > 180.0f) { xRotationAngle -= 360.0f;}
+        print(xRotationAngle);
+        if (xRotationAngle < botRotBound || xRotationAngle > topRotBound) {
+            print("Reverting angle change");
             transform.Rotate(rotateVertical * sensitivity, 0.0f, 0.0f);
         }
     }

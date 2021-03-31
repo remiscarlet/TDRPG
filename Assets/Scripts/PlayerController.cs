@@ -75,10 +75,11 @@ public class PlayerController : MonoBehaviour {
 
     void Shoot() {
         if (Input.GetKeyDown(KeyCode.Space)) {
+
             //print(shootingTip.transform.rotation);
             Instantiate(projectilePrefab,
                         shootingTip.transform.position + shootingTip.transform.forward * 1.25f,
-                        projectilePrefab.transform.rotation);
+                        camera.transform.rotation);
         }
     }
 }

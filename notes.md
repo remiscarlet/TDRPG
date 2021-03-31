@@ -1,7 +1,12 @@
 # Notes
 
 ## Todos
-- Create prefab for "tower locations" which will act as valid spots to build towers
+- Enemy health
+- Enemy healthbar?
+- Damage popups
+- Better wave spawn logic
+- Buildable towers
+- Menu?
 
 ## Thoughts
 - How many Scenes? Should tower building be separate scene?
