@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyController : MonoBehaviour
-{
+public class EnemyController : MonoBehaviour {
     private Transform goal;
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         goal = GameObject.Find("Destination").transform;
 
         NavMeshAgent agent = GetComponent<NavMeshAgent>();
@@ -16,8 +14,7 @@ public class EnemyController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+
     }
 }

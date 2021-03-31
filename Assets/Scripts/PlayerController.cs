@@ -4,24 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random=UnityEngine.Random;
 
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     public GameObject projectilePrefab;
     public float forwardForce;
     private Rigidbody playerRb;
     private GameObject shootingTip;
     private GameObject camera;
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         playerRb = GetComponent<Rigidbody>();
         shootingTip = GameObject.Find("Shooting Tip");
         camera = GameObject.Find("Main Camera");
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         UpdateMovement();
         StabilizeTipping();
         Shoot();

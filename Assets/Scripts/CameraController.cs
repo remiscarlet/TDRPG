@@ -2,23 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
-{
+public class CameraController : MonoBehaviour {
     public float sensitivity;
     private GameObject player;
     private float botRotBound = -30.0f; 
     private float topRotBound = 30.0f;
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         UpdateCamera();
     }
+
     void UpdateCamera() {
         float rotateHorizontal = Input.GetAxis("Mouse X");
         float rotateVertical = Input.GetAxis("Mouse Y");
