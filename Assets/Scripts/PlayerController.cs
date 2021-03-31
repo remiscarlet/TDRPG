@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour {
             newRot.z = -1 * eulerRot.z;
         }
 
-        print($"Correcting tipping by rotating: {newRot} - Orig rot: {eulerRot}");
+        //print($"Correcting tipping by rotating: {newRot} - Orig rot: {eulerRot}");
         transform.Rotate(newRot);
     }
 

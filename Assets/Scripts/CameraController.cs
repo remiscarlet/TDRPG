@@ -24,6 +24,7 @@ public class CameraController : MonoBehaviour {
         player.transform.Rotate(0.0f, rotateHorizontal * sensitivity, 0.0f);
         transform.Rotate(-1 * rotateVertical * sensitivity, 0.0f, 0.0f);
         
+        // This is ugly. Precompute? Uglier?
         var eulerAngle = transform.rotation.eulerAngles;
         if (eulerAngle.x < botRotBound || eulerAngle.x > topRotBound) {
             transform.Rotate(rotateVertical * sensitivity, 0.0f, 0.0f);
