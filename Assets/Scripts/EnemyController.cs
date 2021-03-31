@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
-	private Transform goal;
+    private Transform goal;
     // Start is called before the first frame update
     void Start()
     {
