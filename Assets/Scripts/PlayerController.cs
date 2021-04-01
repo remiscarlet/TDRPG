@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        playerState = new PlayerState();
+        playerState = GetComponent<PlayerState>();
         playerRb = GetComponent<Rigidbody>();
         shootingTip = GameObject.Find("Shooting Tip");
         camera = GameObject.Find("Main Camera");
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour {
 
     void UpdateMovement() {
         bool isShiftPressed = Input.GetKeyDown(KeyCode.LeftShift);
-        print($"isShiftPressed: {isShiftPressed}");
+        //print($"isShiftPressed: {isShiftPressed}");
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
 
@@ -86,20 +86,20 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    private float shotsPerMinute = 600.0f;
-    private float GetWaitTimeBetweenShots() {
-        return 60.0f / shotsPerMinute;
-    }
-
     private float lastShotAt;
     void Shoot() {
-        if (Input.GetKey(KeyCode.Space) && (Time.time - lastShotAt) > GetWaitTimeBetweenShots()) {
-            //print(shootingTip.transform.rotation);
-            Instantiate(projectilePrefab,
-                        shootingTip.transform.position + shootingTip.transform.forward * 1.5f,
-                        camera.transform.rotation);
+        var ability = playerState.GetEquippedSlotAbility();
+        print($"ability: {ability}");
+        if (Input.GetKey(KeyCode.Space) && (Time.time - ability.LastShotAt) > ability.GetWaitTimeBetweenShots()) {
 
-            lastShotAt = Time.time;
+            //print(shootingTip.transform.rotation);
+            //Instantiate(projectilePrefab,
+            //            shootingTip.transform.position + shootingTip.transform.forward * 1.5f,
+            //            camera.transform.rotation);
+            ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
+
+
+            ability.LastShotAt = Time.time;
         }
     }
 }

@@ -7,6 +7,18 @@ using UnityEngine;
 
 public class Tower1Controller : MonoBehaviour
 {
+    private float shootForce;
+    public float ShootForce {
+        get { return shootForce; }
+        set {shootForce = value; }
+    }
+
+    private float damagePerHit;
+    public float DamagePerHit {
+        get { return damagePerHit; }
+        set { damagePerHit = value; }
+    }
+
     public float turretSpinSpeed = 2.0f;
     public GameObject? projectilePrefab;
     private GameController? gameController = null;
@@ -14,6 +26,9 @@ public class Tower1Controller : MonoBehaviour
     private GameObject? towerTurret = null;
     // Start is called before the first frame update
     private void Start() {
+        ShootForce = 50.0f;
+        DamagePerHit = 25.0f;
+
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
         towerHead = transform.Find("TowerHead").gameObject;
         towerTurret = towerHead.transform.Find("TowerTurret").gameObject;
@@ -100,7 +115,15 @@ public class Tower1Controller : MonoBehaviour
     private void Shoot(GameObject enemy) {
         if (GetWaitTimeBetweenShots() < GetTimeSinceLastShot()) {
             Vector3 spawnLocation = towerTurret.transform.position + towerHead.transform.forward * 1.4f;
-            Instantiate(projectilePrefab, spawnLocation, towerHead.transform.rotation, towerTurret.transform);
+            var obj = Instantiate(
+                          projectilePrefab,
+                          spawnLocation,
+                          towerHead.transform.rotation,
+                          towerTurret.transform)
+                          .GetComponent<ProjectileController>();
+            obj.ProjectileDamage = DamagePerHit;
+            obj.ShootForce = ShootForce;
+
             lastShotAt = Time.time;
         }
     }

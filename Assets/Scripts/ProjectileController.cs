@@ -3,8 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ProjectileController : MonoBehaviour {
-    public float shootForce;
-    public float projectileDamage = 25.0f;
+    private float shootForce;
+    public float ShootForce {
+        get { return shootForce; }
+        set { shootForce = value; }
+    }
+
+    private float projectileDamage;
+    public float ProjectileDamage {
+        get { return projectileDamage; }
+        set { projectileDamage = value; }
+    }
+
     private Rigidbody projectileRb;
     // Start is called before the first frame update
     void Start() {

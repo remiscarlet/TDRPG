@@ -27,7 +27,7 @@ public class CameraController : MonoBehaviour {
         // This is ugly. Precompute? Uglier?
         float xRotationAngle = transform.rotation.eulerAngles.x;
         if (xRotationAngle > 180.0f) { xRotationAngle -= 360.0f;}
-        print(xRotationAngle);
+        //print(xRotationAngle);
         if (xRotationAngle < botRotBound || xRotationAngle > topRotBound) {
             print("Reverting angle change");
             transform.Rotate(rotateVertical * sensitivity, 0.0f, 0.0f);

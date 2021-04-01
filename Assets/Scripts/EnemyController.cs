@@ -6,15 +6,19 @@ using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour {
-    private Transform goal;
     public float maxHealth = 100.0f;
-    private float currHealth;
+    public int pointWorth = 100;
     public GameObject damageTextPrefab;
-    private GameObject player;
+
+    private float currHealth;
+    private float healthBarCurrXScale;
     private bool isAlive = true;
+
+    private Transform pathDestination;
+    private GameObject player;
+    private PlayerState playerState;
     private GameController gameController;
     private GameObject? healthBarCurr = null;
-    private float healthBarCurrXScale;
 
     public bool IsAlive() {
         return isAlive;
@@ -26,11 +30,12 @@ public class EnemyController : MonoBehaviour {
         healthBarCurrXScale = healthBarCurr.transform.localScale.x;
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
         player = GameObject.Find("Player");
+        playerState = player.GetComponent<PlayerState>();
         currHealth = maxHealth;
-        goal = GameObject.Find("Destination").transform;
+        pathDestination = GameObject.Find("Destination").transform;
 
         NavMeshAgent agent = GetComponent<NavMeshAgent>();
-        agent.destination = goal.position;
+        agent.destination = pathDestination.position;
     }
 
     // Update is called once per frame
@@ -67,6 +72,7 @@ public class EnemyController : MonoBehaviour {
     private void Die() {
         // Animation eventually?
         gameController.RemoveDeadEnemy(gameObject);
+        playerState.AddToPoints(pointWorth);
         Destroy(gameObject);
     }
 }

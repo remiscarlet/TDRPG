@@ -1,10 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.ComponentModel;
 
 public class MagicMissile : PlayerAbility {
-    public float damagePerHit = 25.0f;
-    public float GetAbilityDamage() {
-        return damagePerHit;
+    public MagicMissile(GameObject prefab) : base(prefab) {
+        DamagePerHit = 50.0f;
+        ShotsPerMinute = 300.0f;
+        ShootForce = 25.0f;
+    }
+
+    public override void SpawnInstances(Transform self, Quaternion enemyDir) {
+        foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(this)) {
+            string name=descriptor.Name;
+            object value=descriptor.GetValue(this);
+            Debug.Log($"{name}={value}");
+        }
+
+
+        Debug.Log("Spawning MagicMissile instances...");
+        Debug.Log(InstancePrefab);
+        var obj = Object.Instantiate(
+                    InstancePrefab,
+                    self.position + self.forward * 1.5f,
+                    enemyDir)
+                    .GetComponent<ProjectileController>();
+        obj.ProjectileDamage = DamagePerHit;
+        obj.ShootForce = ShootForce;
     }
 }
