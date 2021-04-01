@@ -7,18 +7,22 @@ using Random=UnityEngine.Random;
 public class PlayerController : MonoBehaviour {
     public GameObject projectilePrefab;
     public float forwardForce;
+    public float runSpeedup = 5.0f;
     private Rigidbody playerRb;
     private GameObject shootingTip;
     private GameObject camera;
+
+    private PlayerState playerState;
+
     // Start is called before the first frame update
     void Start() {
+        playerState = new PlayerState();
         playerRb = GetComponent<Rigidbody>();
         shootingTip = GameObject.Find("Shooting Tip");
         camera = GameObject.Find("Main Camera");
     }
 
-    // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         UpdateMovement();
         StabilizeTipping();
         Shoot();
@@ -67,19 +71,35 @@ public class PlayerController : MonoBehaviour {
     }
 
     void UpdateMovement() {
+        bool isShiftPressed = Input.GetKeyDown(KeyCode.LeftShift);
+        print($"isShiftPressed: {isShiftPressed}");
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
-        playerRb.AddForce(transform.forward * forwardForce * vInput, ForceMode.Force);
-        playerRb.AddForce(transform.right * forwardForce * hInput, ForceMode.Force);
+
+        if (isShiftPressed) {
+            print($"Applying multiplier of {runSpeedup} to force on rb");
+            playerRb.AddForce(transform.forward * forwardForce * vInput * runSpeedup, ForceMode.Force);
+            playerRb.AddForce(transform.right * forwardForce * hInput * runSpeedup, ForceMode.Force);
+        } else {
+            playerRb.AddForce(transform.forward * forwardForce * vInput, ForceMode.Force);
+            playerRb.AddForce(transform.right * forwardForce * hInput, ForceMode.Force);
+        }
     }
 
-    void Shoot() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+    private float shotsPerMinute = 600.0f;
+    private float GetWaitTimeBetweenShots() {
+        return 60.0f / shotsPerMinute;
+    }
 
+    private float lastShotAt;
+    void Shoot() {
+        if (Input.GetKey(KeyCode.Space) && (Time.time - lastShotAt) > GetWaitTimeBetweenShots()) {
             //print(shootingTip.transform.rotation);
             Instantiate(projectilePrefab,
-                        shootingTip.transform.position + shootingTip.transform.forward * 1.25f,
+                        shootingTip.transform.position + shootingTip.transform.forward * 1.5f,
                         camera.transform.rotation);
+
+            lastShotAt = Time.time;
         }
     }
 }

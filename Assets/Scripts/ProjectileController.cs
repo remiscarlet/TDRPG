@@ -29,7 +29,7 @@ public class ProjectileController : MonoBehaviour {
             }
         }
 
-        if (gameObj.CompareTag("Enemy") || gameObj.CompareTag("Ground")) {
+        if (gameObj.CompareTag("Enemy") || gameObj.CompareTag("Ground") || gameObj.CompareTag("Player")) {
             Destroy(gameObject);
         }
     }   

@@ -13,15 +13,18 @@ public class GameController : MonoBehaviour
     void Start() {
         enemiesHierarchy = GameObject.Find("Enemies");
         enemiesAlive = new List<GameObject>();
-        SpawnWave();
+        StartCoroutine("SpawnWave");
     }
 
-    private void SpawnWave() {
+    private float enemySpawnDelay = 1.0f;
+    private IEnumerator SpawnWave() {
         // For now just always spawn same num enemies as wave
-        for (int i = 0; i < waveNum; i++) {
+        for (int i = 0; i < waveNum * 2; i++) {
             Transform spawnLoc = GetRandomSpawnLocation();
             enemiesAlive.Add(Instantiate(enemyPrefabs[0], spawnLoc.position + new Vector3(0.0f, 1.0f, 0.0f), spawnLoc.rotation, enemiesHierarchy.transform));
+            yield return new WaitForSeconds(enemySpawnDelay);
         }
+        yield return null;
     }
 
     private Transform GetRandomSpawnLocation() {
@@ -36,6 +39,18 @@ public class GameController : MonoBehaviour
 
     public void RemoveDeadEnemy(GameObject enemy) {
         enemiesAlive.Remove(enemy);
+
+        if (enemiesAlive.Count == 0) {
+            StartCoroutine("SpawnNextWave");
+        }
+    }
+
+    private float nextWaveSpawnDelay = 5.0f;
+    private IEnumerator SpawnNextWave() {
+        waveNum += 1;
+        // Other stuff?
+        yield return new WaitForSeconds(nextWaveSpawnDelay);
+        yield return StartCoroutine(SpawnWave());
     }
 
     public List<GameObject> GetAliveEnemies() {

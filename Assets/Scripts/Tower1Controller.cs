@@ -20,7 +20,7 @@ public class Tower1Controller : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update() {
+    private void FixedUpdate() {
         AimAtClosestEnemyInRange();
         ShootIfAimIsClose();
     }
@@ -38,13 +38,17 @@ public class Tower1Controller : MonoBehaviour
         towerHead.transform.rotation = Quaternion.LookRotation(newDirection);
     }
 
+    private float GetDistanceToEnemy(GameObject enemy) {
+        return Vector3.Distance(enemy.transform.position, transform.position);
+    }
+
     public float maxDistance = 25.0f;
     private GameObject? GetClosestEnemyInRange() {
         List<GameObject> enemiesInRange = new List<GameObject>();
         //print(gameController);
         List<GameObject> enemiesAlive = gameController.GetAliveEnemies();
         enemiesInRange = (from enemy in enemiesAlive
-                         where Vector3.Distance(enemy.transform.position, transform.position) < maxDistance
+                         where GetDistanceToEnemy(enemy) < maxDistance
                          select enemy)
                          .ToList();
 
@@ -54,7 +58,7 @@ public class Tower1Controller : MonoBehaviour
         }
 
         return enemiesInRange
-            .OrderBy(t => t)
+            .OrderBy(enemy => GetDistanceToEnemy(enemy))
             .FirstOrDefault();
     }
 
@@ -82,7 +86,7 @@ public class Tower1Controller : MonoBehaviour
         }
     }
 
-    private int shotsPerMinute = 120;
+    private int shotsPerMinute = 240;
     private float GetWaitTimeBetweenShots() {
         return 60.0f / shotsPerMinute; // Seconds
     }

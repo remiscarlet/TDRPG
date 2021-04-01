@@ -40,6 +40,8 @@ public class DamageTextController : MonoBehaviour
 
     private void FadeColor() {
         var material = GetComponent<MeshRenderer>().material;
-        material.color = new Color(material.color.r, material.color.g, material.color.b, (1 - (timeSinceInitialization / fadeDuration)));
+        Color color = material.color;
+        color.a = (1 - (timeSinceInitialization / fadeDuration));
+        material.color = color;
     }
 }

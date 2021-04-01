@@ -23,7 +23,6 @@ public class EnemyController : MonoBehaviour {
     // Start is called before the first frame update
     private void Start() {
         healthBarCurr = transform.Find("MaxHealth/CurrHealth").gameObject;
-        print(healthBarCurr);
         healthBarCurrXScale = healthBarCurr.transform.localScale.x;
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
         player = GameObject.Find("Player");
@@ -48,7 +47,7 @@ public class EnemyController : MonoBehaviour {
     public void InflictDamage(float dmg) {
         currHealth -= dmg;
         DisplayDamage(dmg);
-        if (currHealth < 0) {
+        if (currHealth < 0 && isAlive) {
             isAlive = false;
             Die();
         }
