@@ -13,11 +13,14 @@ public class PlayerController : MonoBehaviour {
     private GameObject camera;
     private float maxInteractDistance = 25.0f;
 
+    private UIRaycasterUtil shopMenuRaycastUtil;
     private PlayerState playerState;
 
     // Start is called before the first frame update
     void Start() {
-        playerState = GetComponent<PlayerState>();
+        shopMenuRaycastUtil = ReferenceManager.ShopMenuRaycastUtilComponent;
+        playerState = ReferenceManager.PlayerStateComponent;
+
         playerRb = GetComponent<Rigidbody>();
         shootingTip = GameObject.Find("Shooting Tip");
         camera = GameObject.Find("Main Camera");
@@ -26,10 +29,12 @@ public class PlayerController : MonoBehaviour {
     void FixedUpdate() {
         UpdateMovement();
         StabilizeTipping();
-        Interact();
         Shoot();
     }
 
+    void Update() {
+        Interact();
+    }
 
     Vector3 normalizeEulerAngle(Vector3 eulerAngle) {
         // Gross.
@@ -74,7 +79,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void UpdateMovement() {
-        bool isShiftPressed = Input.GetKeyDown(KeyCode.LeftShift);
+        bool isShiftPressed = Input.GetKey(KeyCode.LeftShift);
         //print($"isShiftPressed: {isShiftPressed}");
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
@@ -92,17 +97,21 @@ public class PlayerController : MonoBehaviour {
     private float lastShotAt;
     void Shoot() {
         var ability = playerState.GetEquippedSlotAbility();
-        //print($"ability: {ability}");
-        if (!GameState.ShopOpen
-            && Input.GetKey(KeyCode.Space)
-            && (Time.time - ability.LastShotAt) > ability.GetWaitTimeBetweenShots()) {
-            ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
+        if (ability != null) {
+            if (!GameState.ShopOpen
+                && Input.GetKey(KeyCode.Space)
+                && (Time.time - ability.LastShotAt) > ability.GetWaitTimeBetweenShots()) {
+                ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
 
-            ability.LastShotAt = Time.time;
-        }
-        if (!GameState.ShopOpen
-            && Input.GetKey(KeyCode.B)) {
-            ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
+                ability.LastShotAt = Time.time;
+            }
+            if (!GameState.ShopOpen
+                && Input.GetKey(KeyCode.B)) {
+                // Kek.
+                ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
+            }
+        } else {
+            //print("No ability/item equipped, dummy.");
         }
     }
 
@@ -116,15 +125,26 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Interact() {
-        if (Input.GetKey(KeyCode.F)) {
+        GameObject interactableGameObj = null;
+        if (Input.anyKey) {
             RaycastHit hit;
+            // Physics raycast
             if(Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, maxInteractDistance)) {
                 if (hit.transform.gameObject.CompareTag("Interactable")) {
-                    Debug.Log("Found an interactable hit");
-                    Interactable interactable = GetInteractable(hit.transform.gameObject);
-                    interactable.Activate();
+                    interactableGameObj = hit.transform.gameObject;
                 }
             }
+
+            // UI/canvas raycast
+            GameObject hitGameObj;
+            if (shopMenuRaycastUtil.IsPlayerFacingUIElem(out hitGameObj)) {
+                interactableGameObj = hitGameObj;
+            }
+        }
+
+        if (interactableGameObj != null) {
+            Interactable interactable = GetInteractable(interactableGameObj);
+            interactable.Activate();
         }
     }
 }

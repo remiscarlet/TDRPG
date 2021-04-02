@@ -2,15 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAbility {
+public class PlayerAbility : Purchaseable {
     public PlayerAbility(GameObject prefab) {
         InstancePrefab = prefab;
-    }
-
-    private GameObject instancePrefab;
-    public GameObject InstancePrefab {
-        get { return instancePrefab; }
-        set { instancePrefab = value; }
     }
 
     public float damagePerHit;

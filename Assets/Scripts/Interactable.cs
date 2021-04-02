@@ -3,6 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Interactable: MonoBehaviour {
-    public  virtual void Activate() {
+    public virtual void Activate() {
     }
 }

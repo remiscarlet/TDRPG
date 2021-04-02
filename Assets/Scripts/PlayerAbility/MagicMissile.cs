@@ -5,9 +5,13 @@ using System.ComponentModel;
 
 public class MagicMissile : PlayerAbility {
     public MagicMissile(GameObject prefab) : base(prefab) {
+        AbilityName = "Magic Missile";
+        Description = "This is a 'magic missile'.";
         DamagePerHit = 50.0f;
         ShotsPerMinute = 300.0f;
         ShootForce = 25.0f;
+        IconTex = Resources.Load<Texture2D>("Images/PlayerAbility/Magic_Missile");
+        Price = 100;
     }
 
     public override void SpawnInstances(Transform self, Quaternion enemyDir) {

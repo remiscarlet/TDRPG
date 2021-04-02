@@ -8,6 +8,11 @@
     - Upgradeable Towers
     - Upgradeable/purchaseable items/skills? No classes?
         - Start game with no shot ability, buy first ability/weapon. How many items/abilities? 
+- Potential classes:
+    - Clicker/UI Input Delay class for handling "delay repeating keystroke", "pause for .5 seconds on first press, then repeat keystroke every .1 seconds thereafter", etc
+    - Items class as a parent of Purchaseable/PlayerAbility? Are purchaseables _all_ items?
+    - Hotbars class
+    - Inventory class if more than just hotbar? Consumables? Throwables?
 
 ## Thoughts
 - How many Scenes? Should tower building be separate scene?
