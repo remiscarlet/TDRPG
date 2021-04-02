@@ -96,14 +96,13 @@ public class PlayerController : MonoBehaviour {
         if (!GameState.ShopOpen
             && Input.GetKey(KeyCode.Space)
             && (Time.time - ability.LastShotAt) > ability.GetWaitTimeBetweenShots()) {
-
-            //print(shootingTip.transform.rotation);
-            //Instantiate(projectilePrefab,
-            //            shootingTip.transform.position + shootingTip.transform.forward * 1.5f,
-            //            camera.transform.rotation);
             ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
 
             ability.LastShotAt = Time.time;
+        }
+        if (!GameState.ShopOpen
+            && Input.GetKey(KeyCode.B)) {
+            ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
         }
     }
 
