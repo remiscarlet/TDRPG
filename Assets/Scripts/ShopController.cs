@@ -23,10 +23,12 @@ public class ShopController : Interactable {
     }
 
     private GameObject player;
+    private PlayerState playerState;
     private GameObject shopMenu;
     // Start is called before the first frame update
     void Start() {
         player = ReferenceManager.PlayerObject;
+        playerState = ReferenceManager.PlayerStateComponent;
 
         shopMenu = transform.Find("Menu").gameObject;
         proximityPrompt = transform.Find("ProximityPrompt").gameObject;
@@ -45,6 +47,13 @@ public class ShopController : Interactable {
     private void UpdateShopUI() {
         Purchaseable selectedItem = shopInventory[selectedShopInventorySlot];
         currSelectedItemRawImage.texture = selectedItem.IconTex;
+    }
+
+    private Purchaseable GetCurrentSelectedShopItem() {
+        return shopInventory[selectedShopInventorySlot];
+    }
+    private void DeleteCurrentSelectedShopItem() {
+        shopInventory.RemoveAt(selectedShopInventorySlot);
     }
 
     private bool PlayerCloseEnough() {
@@ -135,5 +144,7 @@ public class ShopController : Interactable {
     }
 
     private void PurchaseSelectedItemInMenu() {
+        playerState.AddNewAbilityToHotbar(GetCurrentSelectedShopItem() as PlayerAbility);
+        DeleteCurrentSelectedShopItem();
     }
 }

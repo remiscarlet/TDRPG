@@ -6,12 +6,11 @@ using UnityEngine.UI;
 using TMPro;
 
 public class PlayerState : MonoBehaviour {
-    private int hotbarSize = 2;
+    private int hotbarSize = 4;
     private int selectedHotbarSlot;
 
     private PlayerAbility[] hotbar;
     private GameObject[] hotbarUISlots;
-    private Texture2D[] hotbarTextures;
 
     private SpawnManager spawnManager;
     private TextMeshProUGUI scoreTextMesh;
@@ -25,11 +24,12 @@ public class PlayerState : MonoBehaviour {
 
         // Make hotbar class
         hotbar = new PlayerAbility[hotbarSize];
-        hotbarTextures = new Texture2D[hotbarSize];
         
         hotbarUISlots = new GameObject[hotbarSize];
         hotbarUISlots[0] = GameObject.Find("Canvas/HotbarPanel/Slot1");
         hotbarUISlots[1] = GameObject.Find("Canvas/HotbarPanel/Slot2");
+        hotbarUISlots[2] = GameObject.Find("Canvas/HotbarPanel/Slot3");
+        hotbarUISlots[3] = GameObject.Find("Canvas/HotbarPanel/Slot4");
 
         selectedHotbarSlot = 0;
     }
@@ -50,6 +50,10 @@ public class PlayerState : MonoBehaviour {
             selectedHotbarSlot = 0;
         } else if (Input.GetKey(KeyCode.Alpha2)) {
             selectedHotbarSlot = 1;
+        } else if (Input.GetKey(KeyCode.Alpha3)) {
+            selectedHotbarSlot = 2;
+        } else if (Input.GetKey(KeyCode.Alpha4)) {
+            selectedHotbarSlot = 3;
         }
 
         DrawUI();
@@ -67,9 +71,14 @@ public class PlayerState : MonoBehaviour {
     private void DrawHotbar() {
         // Draw hotbar items
         for (int i = 0; i < hotbarSize; i++) {
-            var hotbar = hotbarUISlots[i];
-            GameObject itemRawImage = hotbar.transform.Find("Item").gameObject;
-            itemRawImage.GetComponent<RawImage>().texture = hotbarTextures[i];
+            PlayerAbility hotbarAbility = hotbar[i];
+            if (hotbarAbility == null) {
+                continue;
+            }
+
+            var hotbarUISlot = hotbarUISlots[i];
+            GameObject itemRawImage = hotbarUISlot.transform.Find("Item").gameObject;
+            itemRawImage.GetComponent<RawImage>().texture = hotbarAbility.IconTex;
         }
 
         // Draw selected hotbar border
@@ -77,6 +86,26 @@ public class PlayerState : MonoBehaviour {
             hotbar.GetComponent<Image>().color = unselectedHotbarColor;
         }
         hotbarUISlots[selectedHotbarSlot].GetComponent<Image>().color = selectedHotbarColor;
+    }
+
+    public bool AddNewAbilityToHotbar(PlayerAbility ability) {
+        int hotbarSlotToInsertInto = GetLowestUnoccupiedHotbarSlot();
+        if (hotbarSlotToInsertInto == -1) {
+            // Hotbar full. Failed to insert.
+            return false;
+        }
+
+        hotbar[hotbarSlotToInsertInto] = ability;
+        return true;
+    }
+
+    private int GetLowestUnoccupiedHotbarSlot() {
+        for (int i = 0; i < hotbarSize; i++) {
+            if (hotbar[i] == null) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public PlayerAbility GetEquippedSlotAbility() {
