@@ -29,7 +29,8 @@ public class Tower1Controller : MonoBehaviour
         ShootForce = 50.0f;
         DamagePerHit = 25.0f;
 
-        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        spawnManager = ReferenceManager.SpawnManagerComponent;
+
         towerHead = transform.Find("TowerHead").gameObject;
         towerTurret = towerHead.transform.Find("TowerTurret").gameObject;
     }

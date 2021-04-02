@@ -26,13 +26,15 @@ public class EnemyController : MonoBehaviour {
 
     // Start is called before the first frame update
     private void Start() {
+        player = ReferenceManager.PlayerObject;
+        spawnManager = ReferenceManager.SpawnManagerComponent;
+        playerState = ReferenceManager.PlayerStateComponent;
+
         healthBarCurr = transform.Find("MaxHealth/CurrHealth").gameObject;
         healthBarCurrXScale = healthBarCurr.transform.localScale.x;
-        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-        player = GameObject.Find("Player");
-        playerState = player.GetComponent<PlayerState>();
-        currHealth = maxHealth;
         pathDestination = GameObject.Find("Destination").transform;
+
+        currHealth = maxHealth;
 
         NavMeshAgent agent = GetComponent<NavMeshAgent>();
         agent.destination = pathDestination.position;

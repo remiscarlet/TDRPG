@@ -63,10 +63,10 @@ public class PlayerState : MonoBehaviour {
             selectedHotbarSlot = 1;
         }
 
-        UpdateUI();
+        DrawUI();
     }
 
-    private void UpdateUI() {
+    private void DrawUI() {
         scoreTextMesh.text = $"Points: {Points}";
         waveTextMesh.text = $"Wave: {spawnManager.WaveNum}";
   
@@ -81,7 +81,6 @@ public class PlayerState : MonoBehaviour {
             var hotbar = hotbarUISlots[i];
             GameObject itemRawImage = hotbar.transform.Find("Item").gameObject;
             itemRawImage.GetComponent<RawImage>().texture = hotbarTextures[i];
-            print(hotbarTextures[i]);
         }
 
         // Draw selected hotbar border
@@ -90,8 +89,6 @@ public class PlayerState : MonoBehaviour {
         }
         hotbarUISlots[selectedHotbarSlot].GetComponent<Image>().color = selectedHotbarColor;
     }
-
-
 
     public PlayerAbility GetEquippedSlotAbility() {
         return hotbar[selectedHotbarSlot];

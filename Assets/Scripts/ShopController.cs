@@ -7,18 +7,33 @@ public class ShopController : Interactable {
     private GameObject proximityPrompt;
 
     private GameObject player;
+    private GameObject shopMenu;
     // Start is called before the first frame update
     void Start() {
-        player = GameObject.Find("Player");
+        player = ReferenceManager.PlayerObject;
+
+        shopMenu = transform.Find("Menu").gameObject;
         proximityPrompt = transform.Find("ProximityPrompt").gameObject;
     }
 
     // Update is called once per frame
     void Update() {
         if (PlayerCloseEnough()) {
-            DisplayShopProximity();
+            OpenShopMenu();
         } else {
-            HideShopProximity();
+            CloseShopMenu();
+        }
+
+        if (GameState.ShopOpen) {
+            if (Input.GetKeyDown(KeyCode.E)) {
+                print("'Selecting next item in menu'");
+                // SelectNextItemInMenu();
+            } else if (Input.GetKeyDown(KeyCode.Q)) {
+                print("'Selecting prev item in menu'");
+                // SelectPrevItemInMenu();
+            } else if (Input.GetKeyDown(KeyCode.Space)) {
+                print("'Purchase selected item'");
+            }
         }
     }
 
@@ -43,11 +58,16 @@ public class ShopController : Interactable {
         proximityPrompt.transform.localScale = Vector3.one;
     }
 
-    public override void Activate() {
-        OpenShopMenu();
-    }
-
     private void OpenShopMenu() {
-        print("Opening shop menu");
+        GameState.ShopOpen = true;
+
+        DisplayShopProximity();
+        shopMenu.SetActive(true);
+    }
+    private void CloseShopMenu() {
+        GameState.ShopOpen = false
+        ;
+        HideShopProximity();
+        shopMenu.SetActive(false);
     }
 }

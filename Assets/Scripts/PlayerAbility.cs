@@ -5,9 +5,6 @@ using UnityEngine;
 public class PlayerAbility {
     public PlayerAbility(GameObject prefab) {
         InstancePrefab = prefab;
-        Debug.Log("Setting instancePrefab");
-        Debug.Log(InstancePrefab);
-        Debug.Log(prefab);
     }
 
     private GameObject instancePrefab;

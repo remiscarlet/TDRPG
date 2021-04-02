@@ -92,8 +92,10 @@ public class PlayerController : MonoBehaviour {
     private float lastShotAt;
     void Shoot() {
         var ability = playerState.GetEquippedSlotAbility();
-        print($"ability: {ability}");
-        if (Input.GetKey(KeyCode.Space) && (Time.time - ability.LastShotAt) > ability.GetWaitTimeBetweenShots()) {
+        //print($"ability: {ability}");
+        if (!GameState.ShopOpen
+            && Input.GetKey(KeyCode.Space)
+            && (Time.time - ability.LastShotAt) > ability.GetWaitTimeBetweenShots()) {
 
             //print(shootingTip.transform.rotation);
             //Instantiate(projectilePrefab,
@@ -115,7 +117,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Interact() {
-        if (Input.GetKey(KeyCode.E)) {
+        if (Input.GetKey(KeyCode.F)) {
             RaycastHit hit;
             if(Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, maxInteractDistance)) {
                 if (hit.transform.gameObject.CompareTag("Interactable")) {
