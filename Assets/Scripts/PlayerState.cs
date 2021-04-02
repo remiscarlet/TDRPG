@@ -32,6 +32,8 @@ public class PlayerState : MonoBehaviour {
         hotbarUISlots[3] = GameObject.Find("Canvas/HotbarPanel/Slot4");
 
         selectedHotbarSlot = 0;
+
+        Points = 500;
     }
 
     
@@ -41,8 +43,16 @@ public class PlayerState : MonoBehaviour {
         set { points = value; }
     }
 
-    public void AddToPoints(int pointsToAdd) {
+    public void AddPoints(int pointsToAdd) {
         Points += pointsToAdd;
+    }
+
+    public void DeductPoints(int pointsToDeduct) {
+        Points -= pointsToDeduct;
+    }
+
+    public bool CanAffordPurchase(int costToPurchase) {
+        return Points > costToPurchase;
     }
 
     public void Update() {

@@ -7,7 +7,9 @@ public class ShopController : Interactable {
     private float maxProximityToPrompt = 10.0f;
     private GameObject proximityPrompt;
 
+    private Text priceText;
     private RawImage currSelectedItemRawImage; 
+    private Texture2D noInventoryTexture;
 
     public GameObject magicMissilePrefab;
     public GameObject fireballPrefab;
@@ -15,10 +17,19 @@ public class ShopController : Interactable {
 
     private int selectedShopInventorySlot = 0;
 
+    private bool shopIsStocked = true;
+    public bool ShopIsStocked {
+        get { return shopIsStocked; }
+        set { shopIsStocked = value; }
+    }
+
     void Awake() {
         shopInventory.Add(new MagicMissile(magicMissilePrefab));
         shopInventory.Add(new Fireball(fireballPrefab));
     
+        priceText = transform.Find("Menu/Price").GetComponent<Text>();
+        noInventoryTexture = Resources.Load<Texture2D>("Images/Shop/NoInventory");
+
         currSelectedItemRawImage = transform.Find("Menu/ItemToBuy").gameObject.GetComponent<RawImage>();
     }
 
@@ -45,15 +56,33 @@ public class ShopController : Interactable {
     }
 
     private void UpdateShopUI() {
-        Purchaseable selectedItem = shopInventory[selectedShopInventorySlot];
-        currSelectedItemRawImage.texture = selectedItem.IconTex;
+        if (ShopIsStocked) {
+            Purchaseable selectedItem = shopInventory[selectedShopInventorySlot];
+            currSelectedItemRawImage.texture = selectedItem.IconTex;
+
+            priceText.text = "Price: " + selectedItem.Price;
+        } else {
+            priceText.text = "";
+        }
     }
 
     private Purchaseable GetCurrentSelectedShopItem() {
+        if (!ShopIsStocked) {
+            throw new System.Exception("Tried getting shop selection while out of stock!");
+        }
         return shopInventory[selectedShopInventorySlot];
     }
     private void DeleteCurrentSelectedShopItem() {
+        if (!ShopIsStocked) {
+            throw new System.Exception("Tried to delete shop inventory while out of stock!");
+        }
+
         shopInventory.RemoveAt(selectedShopInventorySlot);
+
+        if (shopInventory.Count == 0) {
+            currSelectedItemRawImage.texture = noInventoryTexture;
+            ShopIsStocked = false;
+        }
     }
 
     private bool PlayerCloseEnough() {
@@ -113,11 +142,6 @@ public class ShopController : Interactable {
 
     private float lastSelectedNext = 0.0f;
     private void SelectNextItemInMenu() {
-
-        print(Time.time);
-        print(lastSelectedNext);
-        print(Time.time - lastSelectedNext);
-        print(keyRepeatWaitTime);
         if (Time.time - lastSelectedNext > keyRepeatWaitTime) {
             if (selectedShopInventorySlot == shopInventory.Count - 1) {
                 selectedShopInventorySlot = 0;
@@ -125,9 +149,6 @@ public class ShopController : Interactable {
                 selectedShopInventorySlot += 1;
             }
             lastSelectedNext = Time.time;
-            print("Huh?");
-        } else {
-            print("Not yet");
         }
     }
 
@@ -143,8 +164,21 @@ public class ShopController : Interactable {
         }
     }
 
+    private float purchaseCooldown = 2.0f;
+    private float lastPurchased = 0.0f;
     private void PurchaseSelectedItemInMenu() {
-        playerState.AddNewAbilityToHotbar(GetCurrentSelectedShopItem() as PlayerAbility);
-        DeleteCurrentSelectedShopItem();
+        if (Time.time - lastPurchased > purchaseCooldown && ShopIsStocked) {
+            PlayerAbility toPurchase = GetCurrentSelectedShopItem() as PlayerAbility;
+
+            if (playerState.CanAffordPurchase(toPurchase.Price)) { 
+                playerState.DeductPoints(toPurchase.Price);
+                playerState.AddNewAbilityToHotbar(GetCurrentSelectedShopItem() as PlayerAbility);
+                DeleteCurrentSelectedShopItem();
+            } else {
+                print("You can't afford that!");
+            }
+            
+            lastPurchased = Time.time;
+        }
     }
 }

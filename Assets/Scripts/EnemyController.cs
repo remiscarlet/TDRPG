@@ -74,7 +74,7 @@ public class EnemyController : MonoBehaviour {
     private void Die() {
         // Animation eventually?
         spawnManager.RemoveDeadEnemy(gameObject);
-        playerState.AddToPoints(pointWorth);
+        playerState.AddPoints(pointWorth);
         Destroy(gameObject);
     }
 }
