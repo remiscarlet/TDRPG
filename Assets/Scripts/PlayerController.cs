@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody playerRb;
     private GameObject shootingTip;
     private GameObject camera;
+    private float maxInteractDistance = 25.0f;
 
     private PlayerState playerState;
 
@@ -25,8 +26,10 @@ public class PlayerController : MonoBehaviour {
     void FixedUpdate() {
         UpdateMovement();
         StabilizeTipping();
+        Interact();
         Shoot();
     }
+
 
     Vector3 normalizeEulerAngle(Vector3 eulerAngle) {
         // Gross.
@@ -98,8 +101,29 @@ public class PlayerController : MonoBehaviour {
             //            camera.transform.rotation);
             ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
 
-
             ability.LastShotAt = Time.time;
+        }
+    }
+
+    Interactable GetInteractable(GameObject go) {
+        Interactable interactable = go.GetComponent<Interactable>();
+        if (interactable == null) {
+            return GetInteractable(go.transform.parent.gameObject);
+        } else {
+            return interactable;
+        }
+    }
+
+    void Interact() {
+        if (Input.GetKey(KeyCode.E)) {
+            RaycastHit hit;
+            if(Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, maxInteractDistance)) {
+                if (hit.transform.gameObject.CompareTag("Interactable")) {
+                    Debug.Log("Found an interactable hit");
+                    Interactable interactable = GetInteractable(hit.transform.gameObject);
+                    interactable.Activate();
+                }
+            }
         }
     }
 }

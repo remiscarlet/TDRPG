@@ -2,10 +2,48 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class PlayerState : MonoBehaviour {
+    public GameObject magicMissilePrefab;
+    public GameObject fireballPrefab;
 
+    private int hotbarSize;
+    private int selectedHotbarSlot;
+
+    private PlayerAbility[] hotbar;
+    private GameObject[] hotbarUISlots;
+    private Texture2D[] hotbarTextures;
+
+    private SpawnManager spawnManager;
+    private TextMeshProUGUI scoreTextMesh;
+    private TextMeshProUGUI waveTextMesh;
+    public void Start() {
+        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        scoreTextMesh = GameObject.Find("Canvas/TopPanel/ScoreText").GetComponent<TextMeshProUGUI>();
+        waveTextMesh = GameObject.Find("Canvas/TopPanel/WaveText").GetComponent<TextMeshProUGUI>();
+
+        print("Initializing PlayerState");
+        print($"MagicMissile Prefab: {magicMissilePrefab}");
+
+        hotbar = new PlayerAbility[2];
+        hotbar[0] = new MagicMissile(magicMissilePrefab);
+        hotbar[1] = new Fireball(fireballPrefab);
+        hotbarSize = hotbar.Length;
+        
+        hotbarUISlots = new GameObject[hotbarSize];
+        hotbarUISlots[0] = GameObject.Find("Canvas/HotbarPanel/Slot1");
+        hotbarUISlots[1] = GameObject.Find("Canvas/HotbarPanel/Slot2");
+
+        hotbarTextures = new Texture2D[hotbarSize];
+        hotbarTextures[0] = Resources.Load<Texture2D>("Images/PlayerAbility/Magic_Missile");
+        hotbarTextures[1] = Resources.Load<Texture2D>("Images/PlayerAbility/Fireball");
+
+        selectedHotbarSlot = 0;
+    }
+
+    
     private int points;
     public int Points {
         get { return points; }
@@ -14,22 +52,6 @@ public class PlayerState : MonoBehaviour {
 
     public void AddToPoints(int pointsToAdd) {
         Points += pointsToAdd;
-    }
-
-
-    private TextMeshProUGUI scoreTextMesh;
-    public void Start() {
-        scoreTextMesh =  GameObject.Find("Canvas/ScoreText").GetComponent<TextMeshProUGUI>();
-
-        print("Initializing PlayerState");
-        print($"MagicMissile Prefab: {magicMissilePrefab}");
-
-        hotbar = new PlayerAbility[6];
-        hotbar[0] = new MagicMissile(magicMissilePrefab);
-        hotbar[1] = new Fireball(fireballPrefab);
-
-        hotbarSize = hotbar.Length;
-        selectedHotbarSlot = 0;
     }
 
     public void Update() {
@@ -46,15 +68,30 @@ public class PlayerState : MonoBehaviour {
 
     private void UpdateUI() {
         scoreTextMesh.text = $"Points: {Points}";
+        waveTextMesh.text = $"Wave: {spawnManager.WaveNum}";
+  
+        DrawHotbar();
     }
 
-    public GameObject magicMissilePrefab;
-    public GameObject fireballPrefab;
+    private Color selectedHotbarColor = new Color(0.0f, 0.0f, 0.0f, 255.0f);
+    private Color unselectedHotbarColor = new Color(255.0f, 255.0f, 255.0f, 255.0f);
+    private void DrawHotbar() {
+        // Draw hotbar items
+        for (int i = 0; i < hotbarSize; i++) {
+            var hotbar = hotbarUISlots[i];
+            GameObject itemRawImage = hotbar.transform.Find("Item").gameObject;
+            itemRawImage.GetComponent<RawImage>().texture = hotbarTextures[i];
+            print(hotbarTextures[i]);
+        }
 
-    private PlayerAbility[] hotbar;
+        // Draw selected hotbar border
+        foreach (GameObject hotbar in hotbarUISlots) {
+            hotbar.GetComponent<Image>().color = unselectedHotbarColor;
+        }
+        hotbarUISlots[selectedHotbarSlot].GetComponent<Image>().color = selectedHotbarColor;
+    }
 
-    private int hotbarSize;
-    private int selectedHotbarSlot;
+
 
     public PlayerAbility GetEquippedSlotAbility() {
         return hotbar[selectedHotbarSlot];

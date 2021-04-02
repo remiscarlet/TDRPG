@@ -21,7 +21,7 @@ public class Tower1Controller : MonoBehaviour
 
     public float turretSpinSpeed = 2.0f;
     public GameObject? projectilePrefab;
-    private GameController? gameController = null;
+    private SpawnManager? spawnManager = null;
     private GameObject? towerHead = null; 
     private GameObject? towerTurret = null;
     // Start is called before the first frame update
@@ -29,7 +29,7 @@ public class Tower1Controller : MonoBehaviour
         ShootForce = 50.0f;
         DamagePerHit = 25.0f;
 
-        gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         towerHead = transform.Find("TowerHead").gameObject;
         towerTurret = towerHead.transform.Find("TowerTurret").gameObject;
     }
@@ -60,8 +60,8 @@ public class Tower1Controller : MonoBehaviour
     public float maxDistance = 25.0f;
     private GameObject? GetClosestEnemyInRange() {
         List<GameObject> enemiesInRange = new List<GameObject>();
-        //print(gameController);
-        List<GameObject> enemiesAlive = gameController.GetAliveEnemies();
+        //print(spawnManager);
+        List<GameObject> enemiesAlive = spawnManager.GetAliveEnemies();
         enemiesInRange = (from enemy in enemiesAlive
                          where GetDistanceToEnemy(enemy) < maxDistance
                          select enemy)

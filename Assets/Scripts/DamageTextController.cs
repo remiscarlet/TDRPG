@@ -31,7 +31,7 @@ public class DamageTextController : MonoBehaviour
     private void Update() {
         timeSinceInitialization = Time.timeSinceLevelLoad - initializationTime;
         if (timeSinceInitialization > fadeDuration) {
-            print($"Alive for {timeSinceInitialization} secs - Destroying");
+            //print($"Alive for {timeSinceInitialization} secs - Destroying");
             Destroy(gameObject);
         } else {
             FadeColor();

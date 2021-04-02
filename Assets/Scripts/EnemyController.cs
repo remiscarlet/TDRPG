@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour {
     private Transform pathDestination;
     private GameObject player;
     private PlayerState playerState;
-    private GameController gameController;
+    private SpawnManager spawnManager;
     private GameObject? healthBarCurr = null;
 
     public bool IsAlive() {
@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour {
     private void Start() {
         healthBarCurr = transform.Find("MaxHealth/CurrHealth").gameObject;
         healthBarCurrXScale = healthBarCurr.transform.localScale.x;
-        gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         player = GameObject.Find("Player");
         playerState = player.GetComponent<PlayerState>();
         currHealth = maxHealth;
@@ -71,7 +71,7 @@ public class EnemyController : MonoBehaviour {
 
     private void Die() {
         // Animation eventually?
-        gameController.RemoveDeadEnemy(gameObject);
+        spawnManager.RemoveDeadEnemy(gameObject);
         playerState.AddToPoints(pointWorth);
         Destroy(gameObject);
     }
