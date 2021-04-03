@@ -14,8 +14,9 @@ GameObject:
   - component: {fileID: 1083393721167237992}
   - component: {fileID: 7270278705431635182}
   - component: {fileID: 5724126706259992828}
+  - component: {fileID: 4128492458066060048}
   m_Layer: 0
-  m_Name: PlayerProjectile
+  m_Name: MagicMissile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,5 +127,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6186b0b29c9be04faf0a354ff47fe6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shootForce: 25
-  projectileDamage: 25
+--- !u!114 &4128492458066060048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5634710388320584954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce50fb891434a3ca88982c96da0aa92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

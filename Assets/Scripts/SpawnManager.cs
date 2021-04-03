@@ -51,7 +51,7 @@ public class SpawnManager : MonoBehaviour
         enemiesKilled += 1;
         enemiesAlive.Remove(enemy);
 
-        if (enemiesKilled == WaveNum) {
+        if (enemiesKilled == enemiesSpawnedInWave) {
             StartCoroutine("SpawnNextWave");
         }
     }
