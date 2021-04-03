@@ -5,30 +5,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Hotbar {
-    private int _size = 4;
-    public int Size {
-        get { return _size; }
-    }
+    private int hotbarSize = 4;
     
-    private bool _hasHotbarUpdated = true;
-    public bool HasHotbarUpdated {
-        get { return _hasHotbarUpdated; }
-        set { _hasHotbarUpdated = value; }
-    }
-    
-    private int _selectedSlot = 0;
-    private int SelectedSlot {
-        get { return _selectedSlot; }
-        set { _selectedSlot = value; }
-    }
+    private bool hasHotbarUpdated = true;
+    private int selectedSlot = 0;
     
     private Struct_HotbarSlot[] hotbar;
 
     public Hotbar() {
         Debug.Log("INITIALIZING HOTBAR");
-        Debug.Log($"Size is {Size}");
-        hotbar = new Struct_HotbarSlot[Size];
-        for (int slot = 0; slot < Size; slot++) {
+        Debug.Log($"hotbarSize is {hotbarSize}");
+        hotbar = new Struct_HotbarSlot[hotbarSize];
+        for (int slot = 0; slot < hotbarSize; slot++) {
             // 0-index vs 1-index
             GameObject go = GameObject.Find($"Canvas/HotbarPanel/Slot{slot + 1}");
             hotbar[slot] = new Struct_HotbarSlot(slot, go);
@@ -37,15 +25,15 @@ public class Hotbar {
     }
 
     public Struct_HotbarSlot GetCurrentSelectedSlot() {
-        return hotbar[SelectedSlot];
+        return hotbar[selectedSlot];
     }
     
     private readonly Color selectedColor = new Color(0.0f, 0.0f, 0.0f, 255.0f);
     private readonly Color unselectedColor = new Color(255.0f, 255.0f, 255.0f, 255.0f);
     public void DrawIfHotbarIsUpdated() {
-        if (HasHotbarUpdated) {
+        if (hasHotbarUpdated) {
             // Draw hotbar items
-            for (int i = 0; i < Size; i++) {
+            for (int i = 0; i < hotbarSize; i++) {
                 Struct_HotbarSlot hotbarSlot = hotbar[i];
                 PlayerAbility ability = hotbarSlot.Ability;
                 if (ability == null) {
@@ -61,24 +49,24 @@ public class Hotbar {
             }
 
             GetCurrentSelectedSlot().UIImageComponent.color = selectedColor;
-            HasHotbarUpdated = false;
+            hasHotbarUpdated = false;
         }
     }
 
     public void UpdateSelectedSlot() {
-        int prevSlot = SelectedSlot;
+        int prevSlot = selectedSlot;
         if (Input.GetKey(KeyCode.Alpha1)) {
-            SelectedSlot = 0;
+            selectedSlot = 0;
         } else if (Input.GetKey(KeyCode.Alpha2)) {
-            SelectedSlot = 1;
+            selectedSlot = 1;
         } else if (Input.GetKey(KeyCode.Alpha3)) {
-            SelectedSlot = 2;
+            selectedSlot = 2;
         } else if (Input.GetKey(KeyCode.Alpha4)) {
-            SelectedSlot = 3;
+            selectedSlot = 3;
         }
 
-        if (prevSlot != SelectedSlot) {
-            HasHotbarUpdated = true;
+        if (prevSlot != selectedSlot) {
+            hasHotbarUpdated = true;
         }
     }
 
@@ -89,13 +77,13 @@ public class Hotbar {
             return false;
         }
 
-        HasHotbarUpdated = true;
+        hasHotbarUpdated = true;
         hotbar[slotToInsertInto].Ability = ability;
         return true;
     }
 
     private int GetLowestUnoccupiedHotbarSlot() {
-        for (int i = 0; i < Size; i++) {
+        for (int i = 0; i < hotbarSize; i++) {
             if (!hotbar[i].IsOccupied) {
                 return i;
             }

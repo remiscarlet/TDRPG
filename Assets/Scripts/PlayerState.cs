@@ -9,10 +9,6 @@ public class PlayerState : MonoBehaviour {
     private Hotbar hotbar;
     
     private int points;
-    public int Points {
-        get { return points; }
-        set { points = value; }
-    }
     
     private SpawnManager spawnManager;
     private TextMeshProUGUI scoreTextMesh;
@@ -25,19 +21,19 @@ public class PlayerState : MonoBehaviour {
         print("Initializing PlayerState");
         
         hotbar = new Hotbar();
-        Points = 500;
+        points = 500;
     }
 
     public void AddPoints(int pointsToAdd) {
-        Points += pointsToAdd;
+        points += pointsToAdd;
     }
 
     public void DeductPoints(int pointsToDeduct) {
-        Points -= pointsToDeduct;
+        points -= pointsToDeduct;
     }
 
     public bool CanAffordPurchase(int costToPurchase) {
-        return Points > costToPurchase;
+        return points > costToPurchase;
     }
 
     public void Update() {
@@ -47,7 +43,7 @@ public class PlayerState : MonoBehaviour {
     }
 
     private void DrawUI() {
-        scoreTextMesh.text = $"Points: {Points}";
+        scoreTextMesh.text = $"Points: {points}";
         waveTextMesh.text = $"Wave: {spawnManager.WaveNum}";
   
         hotbar.DrawIfHotbarIsUpdated();

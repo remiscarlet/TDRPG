@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopController : Interactable {
-    private float maxProximityToPrompt = 10.0f;
+    private const float MaxProximityToPrompt = 10.0f;
     private GameObject proximityPrompt;
     private Mesh proximityPromptMesh;
 
@@ -81,24 +81,27 @@ public class ShopController : Interactable {
 
         shopInventory.RemoveAt(selectedShopInventorySlot);
 
+
         if (shopInventory.Count == 0) {
             currSelectedItemRawImage.texture = noInventoryTexture;
             ShopIsStocked = false;
+        } else if (selectedShopInventorySlot == shopInventory.Count) {
+            // This assumes you can only ever buy one item at a time.
+            // If can buy multiple items at once, need to make this more robust.
+            selectedShopInventorySlot -= 1;
         }
     }
 
     private bool PlayerCloseEnough() {
         float dist = Vector3.Distance(transform.position, player.transform.position);
-        //print($"Distance to player is: {dist}");
-        return dist < maxProximityToPrompt;
+        return dist < MaxProximityToPrompt;
     }
 
     private void DisplayShopProximity() {
         Vector3 meshSize = proximityPromptMesh.bounds.size;
-        //print($"Mesh Sizes: {meshSize.x}, {meshSize.y}, {meshSize.z}");
-        float xScale = maxProximityToPrompt / meshSize.x * 2;
-        float yScale = maxProximityToPrompt / meshSize.y * 2;
-        float zScale = maxProximityToPrompt / meshSize.z * 2;
+        float xScale = MaxProximityToPrompt / meshSize.x * 2;
+        float yScale = MaxProximityToPrompt / meshSize.y * 2;
+        float zScale = MaxProximityToPrompt / meshSize.z * 2;
         
         proximityPrompt.transform.localScale = new Vector3(xScale, yScale, zScale);
     }
@@ -127,20 +130,17 @@ public class ShopController : Interactable {
     public override void Activate() {
         if (GameState.ShopOpen) {
             if (Input.GetKey(KeyCode.E)) {
-                print("'Selecting next item in menu'");
                 SelectNextItemInMenu();
             } else if (Input.GetKey(KeyCode.Q)) {
-                print("'Selecting prev item in menu'");
                 SelectPrevItemInMenu();
             } else if (Input.GetKey(KeyCode.Space)) {
-                print("'Purchase selected item'");
                 PurchaseSelectedItemInMenu();
             }
         }
     }
 
     private float keyRepeatWaitTime = 0.1f;
-
+    
     private float lastSelectedNext = 0.0f;
     private void SelectNextItemInMenu() {
         if (Time.time - lastSelectedNext > keyRepeatWaitTime) {
