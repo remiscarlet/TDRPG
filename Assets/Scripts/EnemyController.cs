@@ -60,7 +60,7 @@ public class EnemyController : MonoBehaviour {
         }
     }
 
-    private float offsetBound = 3.0f;
+    private float offsetBound = 2.0f;
     private Vector3 RandomizeDmgTextPosOffset() {
         return new Vector3(Random.Range(-offsetBound, offsetBound), 3.0f, Random.Range(-offsetBound, offsetBound));
     }

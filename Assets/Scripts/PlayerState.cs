@@ -6,12 +6,14 @@ using UnityEngine.UI;
 using TMPro;
 
 public class PlayerState : MonoBehaviour {
-    private int hotbarSize = 4;
-    private int selectedHotbarSlot;
-
-    private PlayerAbility[] hotbar;
-    private GameObject[] hotbarUISlots;
-
+    private Hotbar hotbar;
+    
+    private int points;
+    public int Points {
+        get { return points; }
+        set { points = value; }
+    }
+    
     private SpawnManager spawnManager;
     private TextMeshProUGUI scoreTextMesh;
     private TextMeshProUGUI waveTextMesh;
@@ -21,26 +23,9 @@ public class PlayerState : MonoBehaviour {
         waveTextMesh = GameObject.Find("Canvas/TopPanel/WaveText").GetComponent<TextMeshProUGUI>();
 
         print("Initializing PlayerState");
-
-        // Make hotbar class
-        hotbar = new PlayerAbility[hotbarSize];
         
-        hotbarUISlots = new GameObject[hotbarSize];
-        hotbarUISlots[0] = GameObject.Find("Canvas/HotbarPanel/Slot1");
-        hotbarUISlots[1] = GameObject.Find("Canvas/HotbarPanel/Slot2");
-        hotbarUISlots[2] = GameObject.Find("Canvas/HotbarPanel/Slot3");
-        hotbarUISlots[3] = GameObject.Find("Canvas/HotbarPanel/Slot4");
-
-        selectedHotbarSlot = 0;
-
+        hotbar = new Hotbar();
         Points = 500;
-    }
-
-    
-    private int points;
-    public int Points {
-        get { return points; }
-        set { points = value; }
     }
 
     public void AddPoints(int pointsToAdd) {
@@ -56,15 +41,7 @@ public class PlayerState : MonoBehaviour {
     }
 
     public void Update() {
-        if (Input.GetKey(KeyCode.Alpha1)) {
-            selectedHotbarSlot = 0;
-        } else if (Input.GetKey(KeyCode.Alpha2)) {
-            selectedHotbarSlot = 1;
-        } else if (Input.GetKey(KeyCode.Alpha3)) {
-            selectedHotbarSlot = 2;
-        } else if (Input.GetKey(KeyCode.Alpha4)) {
-            selectedHotbarSlot = 3;
-        }
+        hotbar.UpdateSelectedSlot();
 
         DrawUI();
     }
@@ -73,52 +50,14 @@ public class PlayerState : MonoBehaviour {
         scoreTextMesh.text = $"Points: {Points}";
         waveTextMesh.text = $"Wave: {spawnManager.WaveNum}";
   
-        DrawHotbar();
-    }
-
-    private Color selectedHotbarColor = new Color(0.0f, 0.0f, 0.0f, 255.0f);
-    private Color unselectedHotbarColor = new Color(255.0f, 255.0f, 255.0f, 255.0f);
-    private void DrawHotbar() {
-        // Draw hotbar items
-        for (int i = 0; i < hotbarSize; i++) {
-            PlayerAbility hotbarAbility = hotbar[i];
-            if (hotbarAbility == null) {
-                continue;
-            }
-
-            var hotbarUISlot = hotbarUISlots[i];
-            GameObject itemRawImage = hotbarUISlot.transform.Find("Item").gameObject;
-            itemRawImage.GetComponent<RawImage>().texture = hotbarAbility.IconTex;
-        }
-
-        // Draw selected hotbar border
-        foreach (GameObject hotbar in hotbarUISlots) {
-            hotbar.GetComponent<Image>().color = unselectedHotbarColor;
-        }
-        hotbarUISlots[selectedHotbarSlot].GetComponent<Image>().color = selectedHotbarColor;
+        hotbar.DrawIfHotbarIsUpdated();
     }
 
     public bool AddNewAbilityToHotbar(PlayerAbility ability) {
-        int hotbarSlotToInsertInto = GetLowestUnoccupiedHotbarSlot();
-        if (hotbarSlotToInsertInto == -1) {
-            // Hotbar full. Failed to insert.
-            return false;
-        }
-
-        hotbar[hotbarSlotToInsertInto] = ability;
-        return true;
-    }
-
-    private int GetLowestUnoccupiedHotbarSlot() {
-        for (int i = 0; i < hotbarSize; i++) {
-            if (hotbar[i] == null) {
-                return i;
-            }
-        }
-        return -1;
+        return hotbar.AddNewAbility(ability);
     }
 
     public PlayerAbility GetEquippedSlotAbility() {
-        return hotbar[selectedHotbarSlot];
+        return hotbar.GetCurrentSelectedSlot().Ability;
     }
 }

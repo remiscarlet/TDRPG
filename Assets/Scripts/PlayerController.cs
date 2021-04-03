@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody playerRb;
     private GameObject shootingTip;
     private GameObject camera;
-    private float maxInteractDistance = 25.0f;
+    private const float MaxInteractDistance = 25.0f;
 
     private UIRaycasterUtil shopMenuRaycastUtil;
     private PlayerState playerState;
@@ -86,11 +86,11 @@ public class PlayerController : MonoBehaviour {
 
         if (isShiftPressed) {
             print($"Applying multiplier of {runSpeedup} to force on rb");
-            playerRb.AddForce(transform.forward * forwardForce * vInput * runSpeedup, ForceMode.Force);
-            playerRb.AddForce(transform.right * forwardForce * hInput * runSpeedup, ForceMode.Force);
+            playerRb.AddForce(vInput * runSpeedup * forwardForce * transform.forward, ForceMode.Force);
+            playerRb.AddForce(vInput * runSpeedup * forwardForce * transform.right, ForceMode.Force);
         } else {
-            playerRb.AddForce(transform.forward * forwardForce * vInput, ForceMode.Force);
-            playerRb.AddForce(transform.right * forwardForce * hInput, ForceMode.Force);
+            playerRb.AddForce(vInput * forwardForce * transform.forward, ForceMode.Force);
+            playerRb.AddForce(hInput * forwardForce * transform.right, ForceMode.Force);
         }
     }
 
@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.anyKey) {
             RaycastHit hit;
             // Physics raycast
-            if(Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, maxInteractDistance)) {
+            if(Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, MaxInteractDistance)) {
                 if (hit.transform.gameObject.CompareTag("Interactable")) {
                     interactableGameObj = hit.transform.gameObject;
                 }

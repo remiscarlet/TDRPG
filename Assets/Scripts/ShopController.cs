@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ShopController : Interactable {
     private float maxProximityToPrompt = 10.0f;
     private GameObject proximityPrompt;
+    private Mesh proximityPromptMesh;
 
     private Text priceText;
     private RawImage currSelectedItemRawImage; 
@@ -43,6 +44,7 @@ public class ShopController : Interactable {
 
         shopMenu = transform.Find("Menu").gameObject;
         proximityPrompt = transform.Find("ProximityPrompt").gameObject;
+        proximityPromptMesh = proximityPrompt.GetComponent<MeshFilter>().sharedMesh;
     }
 
     // Update is called once per frame
@@ -92,8 +94,7 @@ public class ShopController : Interactable {
     }
 
     private void DisplayShopProximity() {
-        Mesh mesh = proximityPrompt.GetComponent<MeshFilter>().sharedMesh;
-        Vector3 meshSize = mesh.bounds.size;
+        Vector3 meshSize = proximityPromptMesh.bounds.size;
         //print($"Mesh Sizes: {meshSize.x}, {meshSize.y}, {meshSize.z}");
         float xScale = maxProximityToPrompt / meshSize.x * 2;
         float yScale = maxProximityToPrompt / meshSize.y * 2;
