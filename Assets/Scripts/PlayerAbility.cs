@@ -36,10 +36,15 @@ public class PlayerAbility : Purchaseable {
     }
 
     private float towerShotRange;
-
     public float TowerShotRange {
         get { return towerShotRange; }
         set { towerShotRange = value; }
+    }
+
+    private float maxUpwardAngleCorrection = 5.0f;
+    public float MaxUpwardAngleCorrection {
+        get { return maxUpwardAngleCorrection; }
+        set { maxUpwardAngleCorrection = value; }
     }
 
     public virtual void SpawnInstances(Transform self, Quaternion enemyDir) {

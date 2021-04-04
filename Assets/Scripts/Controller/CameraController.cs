@@ -5,9 +5,9 @@ using UnityEngine;
 public class CameraController : MonoBehaviour {
     public float sensitivity;
     private GameObject player;
-    private float botRotBound = -65.0f;
-    private float topRotBound = 80.0f;
-    // Start is called before the first frame update
+    private float botRotBound = 65.0f; // I know, these signs make me sad.
+    private float topRotBound = -65.0f; // Rotating downwards on x axis is in the positive direction tho
+
     void Start() {
         player = ReferenceManager.PlayerObject;
     }
@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour {
         float xRotationAngle = transform.rotation.eulerAngles.x;
         if (xRotationAngle > 180.0f) { xRotationAngle -= 360.0f;}
         //print(xRotationAngle);
-        if (xRotationAngle < botRotBound || xRotationAngle > topRotBound) {
+        if (xRotationAngle > botRotBound || xRotationAngle < topRotBound) {
             print("Reverting angle change");
             transform.Rotate(rotateVertical * sensitivity, 0.0f, 0.0f);
         }

@@ -32,6 +32,12 @@ public class Tower1Controller : MonoBehaviour
         set { towerRange = value; }
     }
 
+    private float maxUpwardAngleCorrection;
+    public float MaxUpwardAngleCorrection {
+        get { return maxUpwardAngleCorrection; }
+        set { maxUpwardAngleCorrection = value; }
+    }
+
     public float turretSpinSpeed = 2.0f;
     public GameObject? projectilePrefab;
     private SpawnManager? spawnManager = null;
@@ -50,6 +56,7 @@ public class Tower1Controller : MonoBehaviour
 
         projectilePrefab = ability.InstancePrefab;
 
+        MaxUpwardAngleCorrection = ability.MaxUpwardAngleCorrection;
         ShootForce = ability.ShootForce * 1.5f;
         DamagePerHit = ability.DamagePerHit;
         print($"Just set tower damage to: {ability.DamagePerHit}");
@@ -97,9 +104,9 @@ public class Tower1Controller : MonoBehaviour
             .FirstOrDefault();
     }
 
-    private float maxUpwardAngleCorrection = 7.0f;
+
     private Vector3 GetTargetDirection(GameObject enemy) {
-        float upwardCorrectionAngle = (maxUpwardAngleCorrection * (Vector3.Distance(enemy.transform.position, transform.position)) / TowerRange);
+        float upwardCorrectionAngle = (MaxUpwardAngleCorrection * (Vector3.Distance(enemy.transform.position, transform.position)) / TowerRange);
         Vector3 angleOffset = new Vector3(0.0f, upwardCorrectionAngle, 0.0f);
         return enemy.transform.position - towerHead.transform.position + angleOffset;
     }

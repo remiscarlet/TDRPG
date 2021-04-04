@@ -10,6 +10,7 @@ public class MagicMissile : PlayerAbility {
         DamagePerHit = 50.0f;
         ShotsPerMinute = 300;
         ShootForce = 40.0f;
+        MaxUpwardAngleCorrection = 5.0f;
         TowerShotRange = 100.0f;
         IconTex = Resources.Load<Texture2D>("Images/PlayerAbility/Magic_Missile");
         Price = 100;

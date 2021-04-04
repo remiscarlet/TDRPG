@@ -6,9 +6,11 @@ public class Fireball : PlayerAbility {
     public Fireball(GameObject prefab) : base(prefab) {
         AbilityName = "Fireball";
         Description = "A 'fire' ball.";
+
         DamagePerHit = 150.0f;
         ShotsPerMinute = 60;
-        ShootForce = 20.0f;
+        ShootForce = 70.0f;
+        MaxUpwardAngleCorrection = 3.0f;
         TowerShotRange = 75.0f;
         IconTex = Resources.Load<Texture2D>("Images/PlayerAbility/Fireball");
         Price = 250;
