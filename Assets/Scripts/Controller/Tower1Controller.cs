@@ -19,20 +19,42 @@ public class Tower1Controller : MonoBehaviour
         set { damagePerHit = value; }
     }
 
+    private int shotsPerMinute = 240;
+
+    public int ShotsPerMinute {
+        get { return shotsPerMinute; }
+        set { shotsPerMinute = value; }
+    }
+
+    private float towerRange;
+    public float TowerRange {
+        get { return towerRange; }
+        set { towerRange = value; }
+    }
+
     public float turretSpinSpeed = 2.0f;
     public GameObject? projectilePrefab;
     private SpawnManager? spawnManager = null;
-    private GameObject? towerHead = null; 
+    private GameObject? towerHead = null;
     private GameObject? towerTurret = null;
     // Start is called before the first frame update
     private void Start() {
-        ShootForce = 50.0f;
-        DamagePerHit = 25.0f;
-
         spawnManager = ReferenceManager.SpawnManagerComponent;
 
         towerHead = transform.Find("TowerHead").gameObject;
         towerTurret = towerHead.transform.Find("TowerTurret").gameObject;
+    }
+
+    public void SetAbility(PlayerAbility ability) {
+        // Set ability here
+
+        projectilePrefab = ability.InstancePrefab;
+
+        ShootForce = ability.ShootForce * 1.5f;
+        DamagePerHit = ability.DamagePerHit;
+        print($"Just set tower damage to: {ability.DamagePerHit}");
+        ShotsPerMinute = ability.ShotsPerMinute;
+        TowerRange = ability.TowerShotRange;
     }
 
     // Update is called once per frame
@@ -58,18 +80,15 @@ public class Tower1Controller : MonoBehaviour
         return Vector3.Distance(enemy.transform.position, transform.position);
     }
 
-    public float maxDistance = 25.0f;
     private GameObject? GetClosestEnemyInRange() {
         List<GameObject> enemiesInRange = new List<GameObject>();
-        //print(spawnManager);
         List<GameObject> enemiesAlive = spawnManager.GetAliveEnemies();
         enemiesInRange = (from enemy in enemiesAlive
-                         where GetDistanceToEnemy(enemy) < maxDistance
+                         where GetDistanceToEnemy(enemy) < TowerRange
                          select enemy)
                          .ToList();
 
         if (enemiesInRange.Count == 0) {
-            //print("Found no enemies in range");
             return null;
         }
 
@@ -80,12 +99,12 @@ public class Tower1Controller : MonoBehaviour
 
     private float maxUpwardAngleCorrection = 7.0f;
     private Vector3 GetTargetDirection(GameObject enemy) {
-        float upwardCorrectionAngle = (maxUpwardAngleCorrection * (Vector3.Distance(enemy.transform.position, transform.position)) / maxDistance);
+        float upwardCorrectionAngle = (maxUpwardAngleCorrection * (Vector3.Distance(enemy.transform.position, transform.position)) / TowerRange);
         Vector3 angleOffset = new Vector3(0.0f, upwardCorrectionAngle, 0.0f);
         return enemy.transform.position - towerHead.transform.position + angleOffset;
     }
 
-    private float maxAngleDeltaToShootFrom = 5.0f;
+    private float maxAngleDeltaToShootFrom = 3.0f;
     private void ShootIfAimIsClose() {
         GameObject? closestEnemy = GetClosestEnemyInRange();
         if (closestEnemy == null) {
@@ -102,9 +121,9 @@ public class Tower1Controller : MonoBehaviour
         }
     }
 
-    private int shotsPerMinute = 240;
+
     private float GetWaitTimeBetweenShots() {
-        return 60.0f / shotsPerMinute; // Seconds
+        return 60.0f / ShotsPerMinute; // Seconds
     }
 
     private float lastShotAt = 0.0f;
@@ -123,6 +142,7 @@ public class Tower1Controller : MonoBehaviour
                           towerTurret.transform)
                           .GetComponent<ProjectileController>();
             obj.ProjectileDamage = DamagePerHit;
+            print($"Setting projectile damage to {DamagePerHit}");
             obj.ShootForce = ShootForce;
 
             lastShotAt = Time.time;

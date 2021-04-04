@@ -125,6 +125,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Interact() {
+        // Handle attempts to interact, ie actively pressing key to interact with, any game objects.
+        // This does not handle "automatic" interactions that require no player input ie proximity based prompts/states
         GameObject interactableGameObj = null;
         if (Input.anyKey) {
             RaycastHit hit;

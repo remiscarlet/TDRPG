@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour {
     public float sensitivity;
     private GameObject player;
-    private float botRotBound = -30.0f; 
-    private float topRotBound = 30.0f;
+    private float botRotBound = -65.0f;
+    private float topRotBound = 80.0f;
     // Start is called before the first frame update
     void Start() {
         player = ReferenceManager.PlayerObject;
@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour {
 
         player.transform.Rotate(0.0f, rotateHorizontal * sensitivity, 0.0f);
         transform.Rotate(-1 * rotateVertical * sensitivity, 0.0f, 0.0f);
-        
+
         // This is ugly. Precompute? Uglier?
         float xRotationAngle = transform.rotation.eulerAngles.x;
         if (xRotationAngle > 180.0f) { xRotationAngle -= 360.0f;}

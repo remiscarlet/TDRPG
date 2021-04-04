@@ -8,6 +8,7 @@ TagManager:
   - TowerSlot
   - Ground
   - Interactable
+  - Tower
   layers:
   - Default
   - TransparentFX

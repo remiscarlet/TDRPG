@@ -7,8 +7,9 @@ public class Fireball : PlayerAbility {
         AbilityName = "Fireball";
         Description = "A 'fire' ball.";
         DamagePerHit = 150.0f;
-        ShotsPerMinute = 60.0f;
+        ShotsPerMinute = 60;
         ShootForce = 20.0f;
+        TowerShotRange = 75.0f;
         IconTex = Resources.Load<Texture2D>("Images/PlayerAbility/Fireball");
         Price = 250;
     }

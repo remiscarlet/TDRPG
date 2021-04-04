@@ -4,30 +4,29 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopController : Interactable {
+    private const float PurchaseCooldown = 2.0f;
+    private const float KeyRepeatWaitTime = 0.2f;
     private const float MaxProximityToPrompt = 10.0f;
+
     private GameObject proximityPrompt;
     private Mesh proximityPromptMesh;
 
     private Text priceText;
-    private RawImage currSelectedItemRawImage; 
+    private RawImage currSelectedItemRawImage;
     private Texture2D noInventoryTexture;
 
     public GameObject magicMissilePrefab;
     public GameObject fireballPrefab;
-    private List<Purchaseable> shopInventory = new List<Purchaseable>(); 
+    private List<Purchaseable> shopInventory = new List<Purchaseable>();
 
     private int selectedShopInventorySlot = 0;
 
-    private bool shopIsStocked = true;
-    public bool ShopIsStocked {
-        get { return shopIsStocked; }
-        set { shopIsStocked = value; }
-    }
+    public bool IsShopStocked { get; set; } = true;
 
     void Awake() {
         shopInventory.Add(new MagicMissile(magicMissilePrefab));
         shopInventory.Add(new Fireball(fireballPrefab));
-    
+
         priceText = transform.Find("Menu/Price").GetComponent<Text>();
         noInventoryTexture = Resources.Load<Texture2D>("Images/Shop/NoInventory");
 
@@ -38,7 +37,7 @@ public class ShopController : Interactable {
     private PlayerState playerState;
     private GameObject shopMenu;
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
         player = ReferenceManager.PlayerObject;
         playerState = ReferenceManager.PlayerStateComponent;
 
@@ -48,8 +47,8 @@ public class ShopController : Interactable {
     }
 
     // Update is called once per frame
-    void Update() {
-        if (PlayerCloseEnough()) {
+    private void Update() {
+        if (IsPlayerInRange()) {
             OpenShopMenu();
             UpdateShopUI();
         } else {
@@ -58,7 +57,7 @@ public class ShopController : Interactable {
     }
 
     private void UpdateShopUI() {
-        if (ShopIsStocked) {
+        if (IsShopStocked) {
             Purchaseable selectedItem = shopInventory[selectedShopInventorySlot];
             currSelectedItemRawImage.texture = selectedItem.IconTex;
 
@@ -69,22 +68,21 @@ public class ShopController : Interactable {
     }
 
     private Purchaseable GetCurrentSelectedShopItem() {
-        if (!ShopIsStocked) {
+        if (!IsShopStocked) {
             throw new System.Exception("Tried getting shop selection while out of stock!");
         }
         return shopInventory[selectedShopInventorySlot];
     }
     private void DeleteCurrentSelectedShopItem() {
-        if (!ShopIsStocked) {
+        if (!IsShopStocked) {
             throw new System.Exception("Tried to delete shop inventory while out of stock!");
         }
 
         shopInventory.RemoveAt(selectedShopInventorySlot);
 
-
         if (shopInventory.Count == 0) {
             currSelectedItemRawImage.texture = noInventoryTexture;
-            ShopIsStocked = false;
+            IsShopStocked = false;
         } else if (selectedShopInventorySlot == shopInventory.Count) {
             // This assumes you can only ever buy one item at a time.
             // If can buy multiple items at once, need to make this more robust.
@@ -92,17 +90,12 @@ public class ShopController : Interactable {
         }
     }
 
-    private bool PlayerCloseEnough() {
-        float dist = Vector3.Distance(transform.position, player.transform.position);
-        return dist < MaxProximityToPrompt;
-    }
-
     private void DisplayShopProximity() {
         Vector3 meshSize = proximityPromptMesh.bounds.size;
         float xScale = MaxProximityToPrompt / meshSize.x * 2;
         float yScale = MaxProximityToPrompt / meshSize.y * 2;
         float zScale = MaxProximityToPrompt / meshSize.z * 2;
-        
+
         proximityPrompt.transform.localScale = new Vector3(xScale, yScale, zScale);
     }
 
@@ -110,7 +103,7 @@ public class ShopController : Interactable {
         proximityPrompt.transform.localScale = Vector3.one;
     }
 
-    private void OpenShopMenu() { 
+    private void OpenShopMenu() {
         if (!GameState.ShopOpen) {
             GameState.ShopOpen = true;
 
@@ -133,17 +126,15 @@ public class ShopController : Interactable {
                 SelectNextItemInMenu();
             } else if (Input.GetKey(KeyCode.Q)) {
                 SelectPrevItemInMenu();
-            } else if (Input.GetKey(KeyCode.Space)) {
+            } else if (Input.GetKey(KeyCode.F)) {
                 PurchaseSelectedItemInMenu();
             }
         }
     }
 
-    private float keyRepeatWaitTime = 0.1f;
-    
     private float lastSelectedNext = 0.0f;
     private void SelectNextItemInMenu() {
-        if (Time.time - lastSelectedNext > keyRepeatWaitTime) {
+        if (Time.time - lastSelectedNext > KeyRepeatWaitTime) {
             if (selectedShopInventorySlot == shopInventory.Count - 1) {
                 selectedShopInventorySlot = 0;
             } else {
@@ -155,7 +146,7 @@ public class ShopController : Interactable {
 
     private float lastSelectedPrev = 0.0f;
     private void SelectPrevItemInMenu() {
-        if (Time.time - lastSelectedPrev > keyRepeatWaitTime) {
+        if (Time.time - lastSelectedPrev > KeyRepeatWaitTime) {
             if (selectedShopInventorySlot == 0) {
                 selectedShopInventorySlot = shopInventory.Count - 1;
             } else {
@@ -165,20 +156,19 @@ public class ShopController : Interactable {
         }
     }
 
-    private float purchaseCooldown = 2.0f;
     private float lastPurchased = 0.0f;
     private void PurchaseSelectedItemInMenu() {
-        if (Time.time - lastPurchased > purchaseCooldown && ShopIsStocked) {
+        if (Time.time - lastPurchased > PurchaseCooldown && IsShopStocked) {
             PlayerAbility toPurchase = GetCurrentSelectedShopItem() as PlayerAbility;
 
-            if (playerState.CanAffordPurchase(toPurchase.Price)) { 
+            if (playerState.CanAffordPurchase(toPurchase.Price)) {
                 playerState.DeductPoints(toPurchase.Price);
                 playerState.AddNewAbilityToHotbar(GetCurrentSelectedShopItem() as PlayerAbility);
                 DeleteCurrentSelectedShopItem();
             } else {
                 print("You can't afford that!");
             }
-            
+
             lastPurchased = Time.time;
         }
     }

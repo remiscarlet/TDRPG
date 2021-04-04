@@ -6,7 +6,7 @@ public class RotateTowardsPlayer : MonoBehaviour {
 
     public GameObject target;
     // Start is called before the first frame update
-    void Start() {
+    private void Start() {
         // Default to targetting player
         target = ReferenceManager.PlayerObject;
     }
@@ -17,13 +17,13 @@ public class RotateTowardsPlayer : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    private void Update() {
         FaceTarget(gameObject, target);
     }
 
     private void FaceTarget(GameObject self, GameObject target) {
         Vector3 directionToTarget = self.transform.position - target.transform.position;
-        Quaternion rotationToTarget = Quaternion.LookRotation(directionToTarget); 
+        Quaternion rotationToTarget = Quaternion.LookRotation(directionToTarget);
         self.transform.rotation = rotationToTarget;
     }
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class DestroyOnOutOfBound : MonoBehaviour {
-    void Update() {
+    private void Update() {
         if (transform.position.y < GameState.MapBoundaryMinY ||
             transform.position.y > GameState.MapBoundaryMaxY ||
             transform.position.x < GameState.MapBoundaryMinX ||

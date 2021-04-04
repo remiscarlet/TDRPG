@@ -16,6 +16,10 @@ public class Purchaseable {
         set { price = value; }
     }
 
+    public int TowerPrice {
+        get { return Price * 2; }
+    }
+
     private Texture2D iconTex;
     public Texture2D IconTex {
         get { return iconTex; }
