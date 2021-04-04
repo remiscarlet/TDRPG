@@ -8,10 +8,14 @@ public class TowerSlotController : Interactable {
     // Start is called before the first frame update
 
     private GameObject silhouette;
+    private readonly Vector3 activeSilhouettePos = new Vector3(0.0f, 2.0f, 0.0f);
+    private readonly Vector3 inactiveSilhouettePos = new Vector3(0.0f, -5.0f, 0.0f);
+
     private PlayerState playerState;
     private GameObject camera;
 
     private GameObject towerPrefab;
+
 
     private void Start() {
         silhouette = transform.Find("Silhouette").gameObject;
@@ -39,14 +43,22 @@ public class TowerSlotController : Interactable {
                 camera.transform.position,
                 camera.transform.forward,
                 out hit,
-                MaxInteractDistance)) {
+                MaxInteractDistance,
+                Layers.ProjectilesMask)) {
 
+                print("Yes towerslot raycast hit");
                 IsBeingLookedAt = MonoBehaviourUtils.IsChild(gameObject, hit.transform.gameObject);
             } else {
+                print("No towerslot raycast hit");
                 IsBeingLookedAt = false;
             }
         }
-        silhouette.SetActive(!IsOccupied && IsBeingLookedAt);
+
+        if (!IsOccupied && IsBeingLookedAt) {
+            ShowSilhouette();
+        } else {
+            HideSilhouette();
+        }
     }
 
     public override void Activate() {
@@ -75,5 +87,15 @@ public class TowerSlotController : Interactable {
         tower.GetComponent<Tower1Controller>().SetAbility(equippedAbility);
 
         IsOccupied = true;
+    }
+
+    private void ShowSilhouette() {
+        silhouette.SetActive(true);
+        silhouette.transform.localPosition = activeSilhouettePos;
+    }
+
+    private void HideSilhouette() {
+        silhouette.SetActive(true);
+        silhouette.transform.localPosition = inactiveSilhouettePos;
     }
 }

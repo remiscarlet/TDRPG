@@ -98,15 +98,13 @@ public class PlayerController : MonoBehaviour {
     void Shoot() {
         var ability = playerState.GetEquippedSlotAbility();
         if (ability != null) {
-            if (!GameState.ShopOpen
-                && Input.GetKey(KeyCode.Space)
+            if (Input.GetKey(KeyCode.Space)
                 && (Time.time - ability.LastShotAt) > ability.GetWaitTimeBetweenShots()) {
                 ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
 
                 ability.LastShotAt = Time.time;
             }
-            if (!GameState.ShopOpen
-                && Input.GetKey(KeyCode.B)) {
+            if (Input.GetKey(KeyCode.B)) {
                 // Kek.
                 ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
             }

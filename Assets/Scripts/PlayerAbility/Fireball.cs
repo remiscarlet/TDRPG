@@ -17,12 +17,15 @@ public class Fireball : PlayerAbility {
     }
 
     public override void SpawnInstances(Transform self, Quaternion enemyDir) {
-        var obj = Object.Instantiate(
-                    InstancePrefab,
-                    self.position + self.forward * 2.0f,
-                    enemyDir)
-                    .GetComponent<ProjectileController>();
-        obj.ProjectileDamage = DamagePerHit;
-        obj.ShootForce = ShootForce;
+        GameObject obj = Object.Instantiate(
+                            InstancePrefab,
+                            self.position + self.forward * 2.0f,
+                            enemyDir);
+        obj.layer = Layers.Projectiles;
+
+        ProjectileController controller = obj.GetComponent<ProjectileController>();
+        controller.ProjectileDamage = DamagePerHit;
+        controller.ShootForce = ShootForce;
+
     }
 }

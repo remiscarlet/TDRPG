@@ -17,21 +17,14 @@ public class MagicMissile : PlayerAbility {
     }
 
     public override void SpawnInstances(Transform self, Quaternion enemyDir) {
-        foreach(PropertyDescriptor descriptor in TypeDescriptor.GetProperties(this)) {
-            string name=descriptor.Name;
-            object value=descriptor.GetValue(this);
-            Debug.Log($"{name}={value}");
-        }
+        GameObject obj = Object.Instantiate(
+                            InstancePrefab,
+                            self.position + self.forward * 1.5f,
+                            enemyDir);
+        obj.layer = Layers.Projectiles;
 
-
-        Debug.Log("Spawning MagicMissile instances...");
-        Debug.Log(InstancePrefab);
-        var obj = Object.Instantiate(
-                    InstancePrefab,
-                    self.position + self.forward * 1.5f,
-                    enemyDir)
-                    .GetComponent<ProjectileController>();
-        obj.ProjectileDamage = DamagePerHit;
-        obj.ShootForce = ShootForce;
+        ProjectileController controller = obj.GetComponent<ProjectileController>();
+        controller.ProjectileDamage = DamagePerHit;
+        controller.ShootForce = ShootForce;
     }
 }
