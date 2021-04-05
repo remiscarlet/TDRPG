@@ -4,23 +4,26 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Struct_HotbarSlot {
-    public Struct_HotbarSlot(int slot, GameObject slotUI) {
-        SlotNumber = slot;
-        UIGameObj = slotUI;
-        UIImageComponent = slotUI.GetComponent<Image>();
-        UIRawImageComponent = slotUI.transform.Find("Item").gameObject.GetComponent<RawImage>();
-    }
+namespace Structs {
+    public struct HotbarSlot {
+        public HotbarSlot(int slot, GameObject slotUI) {
+            SlotNumber = slot;
+            UIGameObj = slotUI;
+            UIImageComponent = slotUI.GetComponent<Image>();
+            UIRawImageComponent = slotUI.transform.Find("Item").gameObject.GetComponent<RawImage>();
+            Ability = null;
+        }
 
-    public bool IsOccupied {
-        get { return Ability != null;  }
-    }
-    
-    public int SlotNumber { get; }
-    public GameObject UIGameObj { get; }
-    public Image UIImageComponent { get; }
-    public RawImage UIRawImageComponent { get; }
-    public PlayerAbility Ability { get; set; }
+        public bool IsOccupied {
+            get { return Ability != null; }
+        }
 
-    public override string ToString() => $"Slot {SlotNumber} - {Ability}";
+        public int SlotNumber { get; }
+        public GameObject UIGameObj { get; }
+        public Image UIImageComponent { get; }
+        public RawImage UIRawImageComponent { get; }
+        public Spell Ability { get; set; }
+
+        public override string ToString() => $"Slot {SlotNumber} - {Ability}";
+    }
 }

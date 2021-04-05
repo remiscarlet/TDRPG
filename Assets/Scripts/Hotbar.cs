@@ -6,36 +6,36 @@ using UnityEngine.UI;
 
 public class Hotbar {
     private int hotbarSize = 4;
-    
+
     private bool hasHotbarUpdated = true;
     private int selectedSlot = 0;
-    
-    private Struct_HotbarSlot[] hotbar;
+
+    private Structs.HotbarSlot[] hotbar;
 
     public Hotbar() {
         Debug.Log("INITIALIZING HOTBAR");
         Debug.Log($"hotbarSize is {hotbarSize}");
-        hotbar = new Struct_HotbarSlot[hotbarSize];
+        hotbar = new Structs.HotbarSlot[hotbarSize];
         for (int slot = 0; slot < hotbarSize; slot++) {
             // 0-index vs 1-index
             GameObject go = GameObject.Find($"Canvas/HotbarPanel/Slot{slot + 1}");
-            hotbar[slot] = new Struct_HotbarSlot(slot, go);
+            hotbar[slot] = new Structs.HotbarSlot(slot, go);
             Debug.Log($"Inserting hotbar slot object: {hotbar[slot]}");
         }
     }
 
-    public Struct_HotbarSlot GetCurrentSelectedSlot() {
+    public Structs.HotbarSlot GetCurrentSelectedSlot() {
         return hotbar[selectedSlot];
     }
-    
+
     private readonly Color selectedColor = new Color(0.0f, 0.0f, 0.0f, 255.0f);
     private readonly Color unselectedColor = new Color(255.0f, 255.0f, 255.0f, 255.0f);
     public void DrawIfHotbarIsUpdated() {
         if (hasHotbarUpdated) {
             // Draw hotbar items
             for (int i = 0; i < hotbarSize; i++) {
-                Struct_HotbarSlot hotbarSlot = hotbar[i];
-                PlayerAbility ability = hotbarSlot.Ability;
+                Structs.HotbarSlot hotbarSlot = hotbar[i];
+                Spell ability = hotbarSlot.Ability;
                 if (ability == null) {
                     continue;
                 }
@@ -44,7 +44,7 @@ public class Hotbar {
             }
 
             // Draw selected hotbar border
-            foreach (Struct_HotbarSlot slot in hotbar) {
+            foreach (Structs.HotbarSlot slot in hotbar) {
                 slot.UIImageComponent.color = unselectedColor;
             }
 
@@ -70,7 +70,7 @@ public class Hotbar {
         }
     }
 
-    public bool AddNewAbility(PlayerAbility ability) {
+    public bool AddNewAbility(Spell ability) {
         int slotToInsertInto = GetLowestUnoccupiedHotbarSlot();
         if (slotToInsertInto == -1) {
             // Hotbar full. Failed to insert.

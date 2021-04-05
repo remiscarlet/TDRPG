@@ -7,6 +7,9 @@ public class GameState : MonoBehaviour {
     void Awake() {
         instance = this;
 
+        SetUpLayerCollisions();
+
+
         // This is kind of ugly.
         MapBoundaryMaxY = 1000.0f;
         MapBoundaryMinY = -15.0f;
@@ -14,6 +17,13 @@ public class GameState : MonoBehaviour {
         MapBoundaryMinX = -1000.0f;
         MapBoundaryMaxZ = 1000.0f;
         MapBoundaryMinZ = -1000.0f;
+    }
+
+    private void SetUpLayerCollisions() {
+        Physics.IgnoreLayerCollision(Layers.EnemyProjectiles, Layers.EnemyProjectiles);
+        Physics.IgnoreLayerCollision(Layers.FriendlyProjectiles, Layers.FriendlyProjectiles);
+        Physics.IgnoreLayerCollision(Layers.Enemy, Layers.EnemyProjectiles);
+        Physics.IgnoreLayerCollision(Layers.Friendly, Layers.FriendlyProjectiles);
     }
 
     private bool shopOpen = false;
@@ -34,7 +44,7 @@ public class GameState : MonoBehaviour {
         get { return instance.mapBoundaryMaxY; }
         set { instance.mapBoundaryMaxY = value; }
     }
-    
+
     private float mapBoundaryMinX;
     public static float MapBoundaryMinX {
         get { return instance.mapBoundaryMinX; }
@@ -46,7 +56,7 @@ public class GameState : MonoBehaviour {
         get { return instance.mapBoundaryMaxX; }
         set { instance.mapBoundaryMaxX = value; }
     }
-    
+
     private float mapBoundaryMinZ;
     public static float MapBoundaryMinZ {
         get { return instance.mapBoundaryMinZ; }

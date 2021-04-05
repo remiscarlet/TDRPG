@@ -21,25 +21,16 @@ public class ReferenceManager : MonoBehaviour {
         spawnManagerComponent = spawnManagerObject.GetComponent<SpawnManager>();
     }
 
-    [System.NonSerialized]
-    public PrefabManager prefabs;
+    [System.NonSerialized] public PrefabManager prefabs;
+    [System.NonSerialized] public EventSystem eventSystemComponent;
+    [System.NonSerialized] public UIRaycasterUtil shopMenuRaycastUtilComponent;
 
-    [System.NonSerialized]
-    public EventSystem eventSystemComponent;
-    [System.NonSerialized]
-    public UIRaycasterUtil shopMenuRaycastUtilComponent;
+    [System.NonSerialized] public GameObject playerObject;
+    [System.NonSerialized] public GameObject cameraObject;
+    [System.NonSerialized] public PlayerState playerStateComponent;
 
-    [System.NonSerialized]
-    public GameObject playerObject;
-    [System.NonSerialized]
-    public GameObject cameraObject;
-    [System.NonSerialized]
-    public PlayerState playerStateComponent;
-
-    [System.NonSerialized]
-    public GameObject spawnManagerObject;
-    [System.NonSerialized]
-    public SpawnManager spawnManagerComponent;
+    [System.NonSerialized] public GameObject spawnManagerObject;
+    [System.NonSerialized] public SpawnManager spawnManagerComponent;
 
     public static PrefabManager Prefabs {
         get { return instance.prefabs; }

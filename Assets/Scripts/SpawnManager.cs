@@ -11,7 +11,7 @@ public class SpawnManager : MonoBehaviour
     private int enemiesKilled;
     private int enemiesSpawnedInWave;
     public int WaveNum { get; set; }
-    
+
     void Awake() {
         WaveNum = 1;
     }
@@ -28,23 +28,27 @@ public class SpawnManager : MonoBehaviour
         enemiesKilled = 0;
         // For now just always spawn same num enemies as wave * 2
         enemiesSpawnedInWave = WaveNum * 2;
-        
+
         for (int i = 0; i < enemiesSpawnedInWave; i++) {
             Transform spawnLoc = GetRandomSpawnLocation();
-            enemiesAlive.Add(Instantiate(enemyPrefabs[0], spawnLoc.position + new Vector3(0.0f, 1.0f, 0.0f), spawnLoc.rotation, enemiesHierarchy.transform));
+
+            GameObject enemy = Instantiate(enemyPrefabs[0], spawnLoc.position + new Vector3(0.0f, 1.0f, 0.0f), spawnLoc.rotation, enemiesHierarchy.transform);
+            enemy.layer = Layers.Enemy;
+            enemiesAlive.Add(enemy);
+
             yield return new WaitForSeconds(enemySpawnDelay);
         }
         yield return null;
     }
 
     private Transform GetRandomSpawnLocation() {
-        GameObject spawnLoc = spawnLocations[Random.Range(0, spawnLocations.Length)]; 
+        GameObject spawnLoc = spawnLocations[Random.Range(0, spawnLocations.Length)];
         return spawnLoc.transform;
     }
 
     // Update is called once per frame
     void Update() {
-        
+
     }
 
     public void RemoveDeadEnemy(GameObject enemy) {

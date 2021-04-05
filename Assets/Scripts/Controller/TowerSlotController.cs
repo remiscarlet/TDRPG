@@ -44,12 +44,10 @@ public class TowerSlotController : Interactable {
                 camera.transform.forward,
                 out hit,
                 MaxInteractDistance,
-                Layers.ProjectilesMask)) {
+                Layers.FriendlyProjectilesMask)) {
 
-                print("Yes towerslot raycast hit");
                 IsBeingLookedAt = MonoBehaviourUtils.IsChild(gameObject, hit.transform.gameObject);
             } else {
-                print("No towerslot raycast hit");
                 IsBeingLookedAt = false;
             }
         }
@@ -72,7 +70,7 @@ public class TowerSlotController : Interactable {
     }
 
     private void PurchaseTower() {
-        PlayerAbility equippedAbility = playerState.GetEquippedSlotAbility();
+        Spell equippedAbility = playerState.GetEquippedSlotAbility();
         if (equippedAbility == null) {
             return;
         }
@@ -84,6 +82,7 @@ public class TowerSlotController : Interactable {
 
         playerState.DeductPoints(towerPrice);
         GameObject tower = Instantiate(towerPrefab, transform);
+        tower.layer = Layers.Friendly;
         tower.GetComponent<Tower1Controller>().SetAbility(equippedAbility);
 
         IsOccupied = true;

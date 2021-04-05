@@ -5,11 +5,11 @@ using UnityEngine;
 using Random=UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour {
-    public GameObject projectilePrefab;
     public float forwardForce;
     public float runSpeedup = 5.0f;
     private Rigidbody playerRb;
     private GameObject shootingTip;
+    private Collider shootingTipCollider;
     private GameObject camera;
     private const float MaxInteractDistance = 25.0f;
 
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour {
 
         playerRb = GetComponent<Rigidbody>();
         shootingTip = GameObject.Find("Shooting Tip");
+        shootingTipCollider = shootingTip.GetComponent<Collider>();
         camera = GameObject.Find("Main Camera");
     }
 
@@ -80,14 +81,13 @@ public class PlayerController : MonoBehaviour {
 
     void UpdateMovement() {
         bool isShiftPressed = Input.GetKey(KeyCode.LeftShift);
-        //print($"isShiftPressed: {isShiftPressed}");
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
 
         if (isShiftPressed) {
             print($"Applying multiplier of {runSpeedup} to force on rb");
             playerRb.AddForce(vInput * runSpeedup * forwardForce * transform.forward, ForceMode.Force);
-            playerRb.AddForce(vInput * runSpeedup * forwardForce * transform.right, ForceMode.Force);
+            playerRb.AddForce(hInput * runSpeedup * forwardForce * transform.right, ForceMode.Force);
         } else {
             playerRb.AddForce(vInput * forwardForce * transform.forward, ForceMode.Force);
             playerRb.AddForce(hInput * forwardForce * transform.right, ForceMode.Force);
@@ -96,17 +96,17 @@ public class PlayerController : MonoBehaviour {
 
     private float lastShotAt;
     void Shoot() {
-        var ability = playerState.GetEquippedSlotAbility();
+        Spell ability = playerState.GetEquippedSlotAbility();
         if (ability != null) {
             if (Input.GetKey(KeyCode.Space)
                 && (Time.time - ability.LastShotAt) > ability.GetWaitTimeBetweenShots()) {
-                ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
+                ability.SpawnBaseProjectile(shootingTip.transform, camera.transform.rotation, shootingTipCollider);
 
                 ability.LastShotAt = Time.time;
             }
             if (Input.GetKey(KeyCode.B)) {
                 // Kek.
-                ability.SpawnInstances(shootingTip.transform, camera.transform.rotation);
+                ability.SpawnBaseProjectile(shootingTip.transform, camera.transform.rotation, shootingTipCollider);
             }
         } else {
             //print("No ability/item equipped, dummy.");

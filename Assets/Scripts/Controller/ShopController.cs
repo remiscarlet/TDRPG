@@ -15,8 +15,6 @@ public class ShopController : Interactable {
     private RawImage currSelectedItemRawImage;
     private Texture2D noInventoryTexture;
 
-    public GameObject magicMissilePrefab;
-    public GameObject fireballPrefab;
     private List<Purchaseable> shopInventory = new List<Purchaseable>();
 
     private int selectedShopInventorySlot = 0;
@@ -24,13 +22,14 @@ public class ShopController : Interactable {
     public bool IsShopStocked { get; set; } = true;
 
     void Awake() {
-        shopInventory.Add(new MagicMissile(magicMissilePrefab));
-        shopInventory.Add(new Fireball(fireballPrefab));
-
         priceText = transform.Find("Menu/Price").GetComponent<Text>();
         noInventoryTexture = Resources.Load<Texture2D>("Images/Shop/NoInventory");
 
         currSelectedItemRawImage = transform.Find("Menu/ItemToBuy").gameObject.GetComponent<RawImage>();
+
+        shopMenu = transform.Find("Menu").gameObject;
+        proximityPrompt = transform.Find("ProximityPrompt").gameObject;
+        proximityPromptMesh = proximityPrompt.GetComponent<MeshFilter>().sharedMesh;
     }
 
     private GameObject player;
@@ -40,10 +39,8 @@ public class ShopController : Interactable {
     private void Start() {
         player = ReferenceManager.PlayerObject;
         playerState = ReferenceManager.PlayerStateComponent;
-
-        shopMenu = transform.Find("Menu").gameObject;
-        proximityPrompt = transform.Find("ProximityPrompt").gameObject;
-        proximityPromptMesh = proximityPrompt.GetComponent<MeshFilter>().sharedMesh;
+        shopInventory.Add(new Spells.MagicMissile(ReferenceManager.Prefabs.MagicMissile));
+        shopInventory.Add(new Spells.Fireball(ReferenceManager.Prefabs.Fireball));
     }
 
     // Update is called once per frame
@@ -159,11 +156,11 @@ public class ShopController : Interactable {
     private float lastPurchased = 0.0f;
     private void PurchaseSelectedItemInMenu() {
         if (Time.time - lastPurchased > PurchaseCooldown && IsShopStocked) {
-            PlayerAbility toPurchase = GetCurrentSelectedShopItem() as PlayerAbility;
+            Spell toPurchase = GetCurrentSelectedShopItem() as Spell;
 
             if (playerState.CanAffordPurchase(toPurchase.Price)) {
                 playerState.DeductPoints(toPurchase.Price);
-                playerState.AddNewAbilityToHotbar(GetCurrentSelectedShopItem() as PlayerAbility);
+                playerState.AddNewAbilityToHotbar(GetCurrentSelectedShopItem() as Spell);
                 DeleteCurrentSelectedShopItem();
             } else {
                 print("You can't afford that!");

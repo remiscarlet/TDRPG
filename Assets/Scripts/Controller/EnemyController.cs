@@ -8,7 +8,6 @@ using UnityEngine.AI;
 public class EnemyController : MonoBehaviour {
     public float maxHealth = 100.0f;
     public int pointWorth = 100;
-    public GameObject damageTextPrefab;
 
     private float currHealth;
     private float healthBarCurrXScale;
@@ -48,7 +47,7 @@ public class EnemyController : MonoBehaviour {
     public void DisplayHealth() {
         float percentHealth = currHealth / maxHealth;
         Vector3 newHealthBarScale = new Vector3(healthBarCurrXScale * percentHealth, healthBarCurr.transform.localScale.y, healthBarCurr.transform.localScale.z);
-        healthBarCurr.transform.localScale = newHealthBarScale; 
+        healthBarCurr.transform.localScale = newHealthBarScale;
     }
 
     public void InflictDamage(float dmg) {
@@ -67,7 +66,7 @@ public class EnemyController : MonoBehaviour {
 
     private void DisplayDamage(float dmg) {
         Vector3 textSpawnLoc = transform.position + RandomizeDmgTextPosOffset();
-        GameObject dmgText = Instantiate(damageTextPrefab, textSpawnLoc, transform.rotation, transform);
+        GameObject dmgText = Instantiate(ReferenceManager.Prefabs.DamageText, textSpawnLoc, transform.rotation, transform);
         dmgText.GetComponent<DamageTextController>().Initialize(dmg);
     }
 

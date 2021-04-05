@@ -38,22 +38,27 @@ public class Tower1Controller : MonoBehaviour
         set { maxUpwardAngleCorrection = value; }
     }
 
+    private Spell towerSpell;
+
     public float turretSpinSpeed = 2.0f;
     public GameObject? projectilePrefab;
     private SpawnManager? spawnManager = null;
     private GameObject? towerHead = null;
+    private Collider towerHeadCollider;
     private GameObject? towerTurret = null;
     // Start is called before the first frame update
     private void Start() {
         spawnManager = ReferenceManager.SpawnManagerComponent;
 
         towerHead = transform.Find("TowerHead").gameObject;
+        towerHeadCollider = towerHead.GetComponent<Collider>();
         towerTurret = towerHead.transform.Find("TowerTurret").gameObject;
     }
 
-    public void SetAbility(PlayerAbility ability) {
+    public void SetAbility(Spell ability) {
         // Set ability here
 
+        towerSpell = ability;
         projectilePrefab = ability.InstancePrefab;
 
         MaxUpwardAngleCorrection = ability.MaxUpwardAngleCorrection;
@@ -64,6 +69,7 @@ public class Tower1Controller : MonoBehaviour
         TowerRange = ability.TowerShotRange;
     }
 
+
     // Update is called once per frame
     private void FixedUpdate() {
         AimAtClosestEnemyInRange();
@@ -71,55 +77,29 @@ public class Tower1Controller : MonoBehaviour
     }
 
     private void AimAtClosestEnemyInRange() {
-        GameObject? closestEnemy = GetClosestEnemyInRange();
+        GameObject? closestEnemy = TargetingUtils.GetClosestEnemyInRange(towerHead.transform, TowerRange);
         if (closestEnemy == null) {
             return;
         }
 
         float singleStep = turretSpinSpeed * Time.deltaTime;
-        Vector3 newDirection = Vector3.RotateTowards(towerHead.transform.forward, GetTargetDirection(closestEnemy), singleStep, 0.0f);
+        Vector3 targetPos = TargetingUtils.GetTargetPosWithCompensation(towerHead.transform, closestEnemy, TowerRange, MaxUpwardAngleCorrection);
+        Vector3 newDirection = Vector3.RotateTowards(towerHead.transform.forward, targetPos, singleStep, 0.0f);
         Debug.DrawRay(towerHead.transform.position, newDirection, Color.red);
 
         towerHead.transform.rotation = Quaternion.LookRotation(newDirection);
     }
 
-    private float GetDistanceToEnemy(GameObject enemy) {
-        return Vector3.Distance(enemy.transform.position, transform.position);
-    }
-
-    private GameObject? GetClosestEnemyInRange() {
-        List<GameObject> enemiesInRange = new List<GameObject>();
-        List<GameObject> enemiesAlive = spawnManager.GetAliveEnemies();
-        enemiesInRange = (from enemy in enemiesAlive
-                         where GetDistanceToEnemy(enemy) < TowerRange
-                         select enemy)
-                         .ToList();
-
-        if (enemiesInRange.Count == 0) {
-            return null;
-        }
-
-        return enemiesInRange
-            .OrderBy(enemy => GetDistanceToEnemy(enemy))
-            .FirstOrDefault();
-    }
-
-
-    private Vector3 GetTargetDirection(GameObject enemy) {
-        float upwardCorrectionAngle = (MaxUpwardAngleCorrection * (Vector3.Distance(enemy.transform.position, transform.position)) / TowerRange);
-        Vector3 angleOffset = new Vector3(0.0f, upwardCorrectionAngle, 0.0f);
-        return enemy.transform.position - towerHead.transform.position + angleOffset;
-    }
-
     private float maxAngleDeltaToShootFrom = 3.0f;
     private void ShootIfAimIsClose() {
-        GameObject? closestEnemy = GetClosestEnemyInRange();
+        GameObject? closestEnemy = TargetingUtils.GetClosestEnemyInRange(towerHead.transform, TowerRange);
         if (closestEnemy == null) {
             return;
         }
 
         //float angleToTarget = Vector3.Angle(towerHead.transform.position, closestEnemy.transform.position);
-        float angleToTarget = Vector3.Angle(towerHead.transform.forward, GetTargetDirection(closestEnemy));
+        Vector3 targetPos = TargetingUtils.GetTargetPosWithCompensation(towerHead.transform, closestEnemy, TowerRange, MaxUpwardAngleCorrection);
+        float angleToTarget = Vector3.Angle(towerHead.transform.forward, targetPos);
         if (angleToTarget < maxAngleDeltaToShootFrom) {
             //print("Shooting at target");
             Shoot(closestEnemy);
@@ -141,16 +121,18 @@ public class Tower1Controller : MonoBehaviour
     private Vector3 projectilePosOffset = new Vector3(-0.039f, -1.15f, 0.05f);
     private void Shoot(GameObject enemy) {
         if (GetWaitTimeBetweenShots() < GetTimeSinceLastShot()) {
-            Vector3 spawnLocation = towerTurret.transform.position + towerHead.transform.forward * 1.4f;
-            var obj = Instantiate(
+            //Vector3 spawnLocation = towerTurret.transform.position + towerHead.transform.forward * 1.4f;
+            towerSpell.SpawnBaseProjectile(towerTurret.transform, towerHead.transform.rotation, towerHeadCollider);
+                /*
+            var controller = Instantiate(
                           projectilePrefab,
                           spawnLocation,
                           towerHead.transform.rotation,
                           towerTurret.transform)
                           .GetComponent<ProjectileController>();
-            obj.ProjectileDamage = DamagePerHit;
-            print($"Setting projectile damage to {DamagePerHit}");
-            obj.ShootForce = ShootForce;
+            controller.ProjectileDamage = DamagePerHit;
+            controller.ProjectileSpell = towerSpell;
+            */
 
             lastShotAt = Time.time;
         }

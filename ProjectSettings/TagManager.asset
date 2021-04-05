@@ -13,13 +13,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Projectiles
+  - 
   - Water
   - UI
-  - Overlay
-  - 
-  - 
-  - 
+  - Enemy
+  - Friendly
+  - EnemyProjectiles
+  - FriendlyProjectiles
   - 
   - 
   - 

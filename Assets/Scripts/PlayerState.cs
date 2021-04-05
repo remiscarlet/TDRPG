@@ -7,9 +7,9 @@ using TMPro;
 
 public class PlayerState : MonoBehaviour {
     private Hotbar hotbar;
-    
+
     private int points;
-    
+
     private SpawnManager spawnManager;
     private TextMeshProUGUI scoreTextMesh;
     private TextMeshProUGUI waveTextMesh;
@@ -19,9 +19,9 @@ public class PlayerState : MonoBehaviour {
         waveTextMesh = GameObject.Find("Canvas/TopPanel/WaveText").GetComponent<TextMeshProUGUI>();
 
         print("Initializing PlayerState");
-        
+
         hotbar = new Hotbar();
-        points = 500;
+        points = 1000;
     }
 
     public void AddPoints(int pointsToAdd) {
@@ -45,15 +45,15 @@ public class PlayerState : MonoBehaviour {
     private void DrawUI() {
         scoreTextMesh.text = $"Points: {points}";
         waveTextMesh.text = $"Wave: {spawnManager.WaveNum}";
-  
+
         hotbar.DrawIfHotbarIsUpdated();
     }
 
-    public bool AddNewAbilityToHotbar(PlayerAbility ability) {
+    public bool AddNewAbilityToHotbar(Spell ability) {
         return hotbar.AddNewAbility(ability);
     }
 
-    public PlayerAbility GetEquippedSlotAbility() {
+    public Spell GetEquippedSlotAbility() {
         return hotbar.GetCurrentSelectedSlot().Ability;
     }
 }
