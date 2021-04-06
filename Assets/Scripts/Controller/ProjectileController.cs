@@ -37,7 +37,7 @@ public class ProjectileController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         print($"ProjectileController calling Spell.Animate with timeSinceSpawned of {Time.time - spawnTime}");
         ProjectileSpell.Animate(Time.time - spawnTime, transform, projectileRb);
     }

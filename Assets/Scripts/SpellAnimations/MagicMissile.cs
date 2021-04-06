@@ -7,7 +7,7 @@ namespace SpellAnimations {
         public MagicMissile() {
             animations = new ProjectileAnimation[]{
                 new ProjectileAnimations.ImpulseFwdAtStart(0.5f, 20.0f),
-                new ProjectileAnimations.HomeAtClosestTarget(Mathf.Infinity, 200.0f),
+                new ProjectileAnimations.HomeAtClosestTarget(Mathf.Infinity, 50.0f),
             };
 
             float durSoFar = 0.0f;
