@@ -21,7 +21,7 @@ namespace Spells {
         }
 
         public override GameObject SpawnBaseProjectile(Transform self, Quaternion enemyDir, Collider spawnerCollider) {
-            InstanceSpawnOffset = Vector3.zero; //self.forward * 1.5f;
+            InstanceSpawnOffset = self.forward * 1.5f;
             //enemyDir.SetLookRotation(Vector3);
             GameObject projectile = base.SpawnBaseProjectile(self, enemyDir, spawnerCollider);
             return projectile;

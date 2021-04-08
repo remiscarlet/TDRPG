@@ -32,10 +32,10 @@ namespace ProjectileAnimations {
 
             GameObject enemy = TargetingUtils.GetClosestEnemyInRange(projectileTransform, Mathf.Infinity);
             if (enemy == null) {
-                Debug.Log("No enemies left to home in on.");
+                //Debug.Log("No enemies left to home in on.");
                 return false;
             }
-            Debug.Log($"projTransform.position: {projectileTransform.position} - transform.fwd {projectileTransform.transform.forward} - enemy pos: {enemy.transform.position}");
+            //Debug.Log($"projTransform.position: {projectileTransform.position} - transform.fwd {projectileTransform.transform.forward} - enemy pos: {enemy.transform.position}");
 
             //Vector3 targetPos =
             //    TargetingUtils.GetTargetPosWithCompensation(projectileTransform, enemy, Mathf.Infinity, 0.0f);
@@ -44,8 +44,8 @@ namespace ProjectileAnimations {
                 MaxRadianTurn, 0.0f);
 
             //Vector3 forceVectorNorm = (targetPos - projectileTransform.position).normalized;
-            Debug.Log(
-                $"Homing AddForce({targetPos.normalized} * {projectileForce} on projectile to target {targetPos} - timeSinceAnimStarted {timeSinceAnimStarted}");
+            //Debug.Log(
+            //    $"Homing AddForce({targetPos.normalized} * {projectileForce} on projectile to target {targetPos} - timeSinceAnimStarted {timeSinceAnimStarted}");
 
             //projectileTransform.rotation = Quaternion.RotateTowards(projectileTransform.transform.forward, );
             Quaternion targetRotation = Quaternion.LookRotation(targetPos, projectileTransform.up);

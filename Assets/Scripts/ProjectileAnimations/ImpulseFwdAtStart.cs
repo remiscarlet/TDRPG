@@ -25,9 +25,9 @@ namespace ProjectileAnimations {
                 timeSinceAnimStarted = timeSinceProjectileSpawned - timeAnimStarted;
             }
 
-            Debug.Log($"Impulse animate: timeSinceAnimStarted {timeSinceAnimStarted}");
+            //Debug.Log($"Impulse animate: timeSinceAnimStarted {timeSinceAnimStarted}");
             if (timeSinceAnimStarted == 0.0f) {
-                Debug.Log($"Impulse AddForce({projectileTransform.forward} * {impulseForce} on projectile");
+                //Debug.Log($"Impulse AddForce({projectileTransform.forward} * {impulseForce} on projectile");
                 projectileRb.AddForce(projectileTransform.forward * impulseForce, ForceMode.Impulse);
             } else if (timeSinceAnimStarted >= waitAfterImpulse) {
                 return true;

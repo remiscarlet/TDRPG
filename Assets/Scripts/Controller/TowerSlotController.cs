@@ -83,7 +83,7 @@ public class TowerSlotController : Interactable {
         playerState.DeductPoints(towerPrice);
         GameObject tower = Instantiate(towerPrefab, transform);
         tower.layer = Layers.Friendly;
-        tower.GetComponent<Tower1Controller>().SetAbility(equippedAbility);
+        tower.GetComponent<TowerController>().SetAbility(equippedAbility);
 
         IsOccupied = true;
     }

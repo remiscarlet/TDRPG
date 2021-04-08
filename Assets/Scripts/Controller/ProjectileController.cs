@@ -38,7 +38,7 @@ public class ProjectileController : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-        print($"ProjectileController calling Spell.Animate with timeSinceSpawned of {Time.time - spawnTime}");
+        //print($"ProjectileController calling Spell.Animate with timeSinceSpawned of {Time.time - spawnTime}");
         ProjectileSpell.Animate(Time.time - spawnTime, transform, projectileRb);
     }
 
@@ -47,7 +47,7 @@ public class ProjectileController : MonoBehaviour {
         GameObject gameObj = collision.gameObject;
 
         if (gameObj.CompareTag("Enemy")) {
-            print($"Detected collision: {transform.position}, {spawnLoc}");
+            //print($"Detected collision: {transform.position}, {spawnLoc}");
             if (CanSplash) {
                 ProjectileSpell.OnProjectileHit(transform, collision.collider);
             }

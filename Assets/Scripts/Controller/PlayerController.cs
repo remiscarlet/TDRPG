@@ -35,6 +35,17 @@ public class PlayerController : MonoBehaviour {
 
     void Update() {
         Interact();
+        CheckForMiscInputs();
+    }
+
+    private void CheckForMiscInputs() {
+        // Rename in the future
+
+        if (Input.GetKey(KeyCode.C)) {
+            if (playerState.IsComboingTowers()) {
+                playerState.ClearTowersBeingCombod();
+            }
+        }
     }
 
     Vector3 normalizeEulerAngle(Vector3 eulerAngle) {
@@ -130,7 +141,9 @@ public class PlayerController : MonoBehaviour {
             RaycastHit hit;
             // Physics raycast
             if(Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, MaxInteractDistance)) {
-                if (hit.transform.gameObject.CompareTag("Interactable")) {
+                if (hit.transform.gameObject.CompareTag("Interactable") || hit.transform.gameObject.CompareTag("Tower")) {
+                    // Objects can't have more than one tag... :-/
+                    // Internal workaround?
                     interactableGameObj = hit.transform.gameObject;
                 }
             }
