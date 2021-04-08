@@ -10,40 +10,40 @@ public class TowerController : Interactable
 {
     private float shootForce;
     public float ShootForce {
-        get { return shootForce; }
+        get => shootForce;
         set {shootForce = value; }
     }
 
     private float damagePerHit;
     public float DamagePerHit {
-        get { return damagePerHit; }
-        set { damagePerHit = value; }
+        get => damagePerHit;
+        set => damagePerHit = value;
     }
 
     private int shotsPerMinute = 240;
 
     public int ShotsPerMinute {
-        get { return shotsPerMinute; }
-        set { shotsPerMinute = value; }
+        get => shotsPerMinute;
+        set => shotsPerMinute = value;
     }
 
     private float towerRange;
     public float TowerRange {
-        get { return towerRange; }
-        set { towerRange = value; }
+        get => towerRange;
+        set => towerRange = value;
     }
 
     private float maxUpwardAngleCorrection;
     public float MaxUpwardAngleCorrection {
-        get { return maxUpwardAngleCorrection; }
-        set { maxUpwardAngleCorrection = value; }
+        get => maxUpwardAngleCorrection;
+        set => maxUpwardAngleCorrection = value;
     }
 
     private bool isBeingCombod;
 
     public bool IsBeingCombod {
-        get { return isBeingCombod; }
-        set { isBeingCombod = value; }
+        get => isBeingCombod;
+        set => isBeingCombod = value;
     }
 
     private Spell towerSpell;
@@ -51,6 +51,7 @@ public class TowerController : Interactable
     public float turretSpinSpeed = 2.0f;
     public GameObject? projectilePrefab;
     private SpawnManager? spawnManager = null;
+    private TowerManager towerManager;
     private GameObject? towerHead = null;
     private Collider towerHeadCollider;
     private GameObject? towerTurret = null;
@@ -58,6 +59,7 @@ public class TowerController : Interactable
     // Start is called before the first frame update
     private void Start() {
         spawnManager = ReferenceManager.SpawnManagerComponent;
+        towerManager = ReferenceManager.TowerManagerComponent;
 
         comboRing = transform.Find("ComboRing").gameObject;
         towerHead = transform.Find("TowerHead").gameObject;
@@ -87,9 +89,8 @@ public class TowerController : Interactable
     }
 
     public override void Activate() {
-        if (Input.GetKey(KeyCode.C)) {
-            IsBeingCombod = true;
-            ReferenceManager.PlayerStateComponent.AddToTowerBeingCombod(this);
+        if (Input.GetKey(KeyCode.F) && !towerManager.IsTowerInCombo(this) && !towerManager.IsTowerMidComboCreation(this)) {
+            towerManager.AddToTowersBeingCombod(this);
         }
     }
 
@@ -106,10 +107,10 @@ public class TowerController : Interactable
 
         float singleStep = turretSpinSpeed * Time.deltaTime;
         Vector3 targetPos = TargetingUtils.GetTargetPosWithCompensation(towerHead.transform, closestEnemy, TowerRange, MaxUpwardAngleCorrection);
-        print($"targetPos: {targetPos}");
+        //print($"targetPos: {targetPos}");
         targetPos = TargetingUtils.ApplySpellTowerTurretOffset(towerSpell.SpellTowerTurretOffset, targetPos,
             towerHead.transform.position, TowerRange);
-        print($"Offset targetPos: {targetPos}");
+        //print($"Offset targetPos: {targetPos}");
         Vector3 newDirection = Vector3.RotateTowards(towerHead.transform.forward, targetPos, singleStep, 0.0f);
         Debug.DrawRay(towerHead.transform.position, newDirection, Color.red);
 

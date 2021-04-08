@@ -22,7 +22,6 @@ public class UIRaycasterUtil : MonoBehaviour {
         if (m_EventSystem == null) {
             // Awake() and Start() aren't called until gameobject is enabled seems like
             hitGameObject = null;
-            print("Huh!?");
             return false;
         }
         m_PointerEventData = new PointerEventData(m_EventSystem);
@@ -32,7 +31,6 @@ public class UIRaycasterUtil : MonoBehaviour {
         m_Raycaster.Raycast(m_PointerEventData, results);
 
         if (results.Count == 0) {
-            print("No UIElem raycast hit");
             hitGameObject = null;
             return false;
         }

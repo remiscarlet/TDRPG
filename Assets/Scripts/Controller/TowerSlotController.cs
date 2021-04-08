@@ -11,6 +11,7 @@ public class TowerSlotController : Interactable {
     private readonly Vector3 activeSilhouettePos = new Vector3(0.0f, 2.0f, 0.0f);
     private readonly Vector3 inactiveSilhouettePos = new Vector3(0.0f, -5.0f, 0.0f);
 
+    private TowerManager towerManager;
     private PlayerState playerState;
     private GameObject camera;
 
@@ -19,6 +20,7 @@ public class TowerSlotController : Interactable {
 
     private void Start() {
         silhouette = transform.Find("Silhouette").gameObject;
+        towerManager = ReferenceManager.TowerManagerComponent;
         playerState = ReferenceManager.PlayerStateComponent;
         camera = ReferenceManager.CameraObject;
         towerPrefab = ReferenceManager.Prefabs.Tower;
@@ -75,16 +77,7 @@ public class TowerSlotController : Interactable {
             return;
         }
 
-        int towerPrice = equippedAbility.TowerPrice;
-        if (!playerState.CanAffordPurchase(towerPrice)) {
-            return;
-        }
-
-        playerState.DeductPoints(towerPrice);
-        GameObject tower = Instantiate(towerPrefab, transform);
-        tower.layer = Layers.Friendly;
-        tower.GetComponent<TowerController>().SetAbility(equippedAbility);
-
+        towerManager.CreateTower(equippedAbility, transform);
         IsOccupied = true;
     }
 

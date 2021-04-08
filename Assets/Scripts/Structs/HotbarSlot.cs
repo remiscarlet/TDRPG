@@ -15,7 +15,7 @@ namespace Structs {
         }
 
         public bool IsOccupied {
-            get { return Ability != null; }
+            get => Ability != null;
         }
 
         public int SlotNumber { get; }

@@ -10,30 +10,10 @@ public class PlayerState : MonoBehaviour {
 
     private int points;
 
-
-    private List<TowerController> towersBeingCombod;
-    public bool IsComboingTowers() {
-        return towersBeingCombod.Count > 0;
-    }
-
-    public void AddToTowerBeingCombod(TowerController tower) {
-        towersBeingCombod.Add(tower);
-    }
-
-    public void ClearTowersBeingCombod() {
-        foreach (TowerController tower in towersBeingCombod) {
-            tower.IsBeingCombod = false;
-        }
-
-        towersBeingCombod.Clear();
-    }
-
     private SpawnManager spawnManager;
     private TextMeshProUGUI scoreTextMesh;
     private TextMeshProUGUI waveTextMesh;
     public void Start() {
-        towersBeingCombod = new List<TowerController>();
-
         spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         scoreTextMesh = GameObject.Find("Canvas/TopPanel/ScoreText").GetComponent<TextMeshProUGUI>();
         waveTextMesh = GameObject.Find("Canvas/TopPanel/WaveText").GetComponent<TextMeshProUGUI>();

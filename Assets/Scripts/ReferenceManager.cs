@@ -16,9 +16,14 @@ public class ReferenceManager : MonoBehaviour {
         playerObject = GameObject.Find("Player");
         cameraObject = playerObject.transform.Find("Player Head/Main Camera").gameObject;
         playerStateComponent = playerObject.GetComponent<PlayerState>();
+        print("ReferenceManager");
+        print(playerObject);
+        print(playerStateComponent);
 
         spawnManagerObject = GameObject.Find("SpawnManager");
         spawnManagerComponent = spawnManagerObject.GetComponent<SpawnManager>();
+
+        towerManagerComponent = GameObject.Find("GameController").GetComponent<TowerManager>();
     }
 
     [System.NonSerialized] public PrefabManager prefabs;
@@ -32,31 +37,37 @@ public class ReferenceManager : MonoBehaviour {
     [System.NonSerialized] public GameObject spawnManagerObject;
     [System.NonSerialized] public SpawnManager spawnManagerComponent;
 
+    [System.NonSerialized] public TowerManager towerManagerComponent;
+
     public static PrefabManager Prefabs {
-        get { return instance.prefabs; }
+        get => instance.prefabs;
     }
 
     public static EventSystem EventSystemComponent {
-        get { return instance.eventSystemComponent; }
+        get => instance.eventSystemComponent;
     }
     public static UIRaycasterUtil ShopMenuRaycastUtilComponent {
-        get { return instance.shopMenuRaycastUtilComponent; }
+        get => instance.shopMenuRaycastUtilComponent;
     }
 
     public static GameObject PlayerObject {
-        get { return instance.playerObject; }
+        get => instance.playerObject;
     }
     public static GameObject CameraObject {
-        get { return instance.cameraObject; }
+        get => instance.cameraObject;
     }
     public static PlayerState PlayerStateComponent {
-        get { return instance.playerStateComponent; }
+        get => instance.playerStateComponent;
     }
 
     public static GameObject SpawnManagerObject {
-        get { return instance.spawnManagerObject; }
+        get => instance.spawnManagerObject;
     }
     public static SpawnManager SpawnManagerComponent {
-        get { return instance.spawnManagerComponent; }
+        get => instance.spawnManagerComponent;
+    }
+
+    public static TowerManager TowerManagerComponent {
+        get => instance.towerManagerComponent;
     }
 }

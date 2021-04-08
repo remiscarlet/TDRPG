@@ -9,26 +9,26 @@ public class Spell : Purchaseable {
 
     private float damagePerHit;
     public float DamagePerHit {
-        get { return damagePerHit; }
-        set { damagePerHit = value; }
+        get => damagePerHit;
+        set => damagePerHit = value;
     }
 
     private bool canSplash;
     public bool CanSplash {
-        get { return canSplash; }
-        set { canSplash = value; }
+        get => canSplash;
+        set => canSplash = value;
     }
 
     private int shotsPerMinute;
     public int ShotsPerMinute {
-        get { return shotsPerMinute; }
-        set { shotsPerMinute = value; }
+        get => shotsPerMinute;
+        set => shotsPerMinute = value;
     }
 
     private float shootForce;
     public float ShootForce {
-        get { return shootForce;  }
-        set { shootForce = value; }
+        get => shootForce;
+        set => shootForce = value;
     }
 
     public float GetWaitTimeBetweenShots() {
@@ -37,38 +37,38 @@ public class Spell : Purchaseable {
 
     private float lastShotAt;
     public float LastShotAt {
-        get { return lastShotAt; }
-        set { lastShotAt = value; }
+        get => lastShotAt;
+        set => lastShotAt = value;
     }
 
     private float towerShotRange;
     public float TowerShotRange {
-        get { return towerShotRange; }
-        set { towerShotRange = value; }
+        get => towerShotRange;
+        set => towerShotRange = value;
     }
 
     private float maxUpwardAngleCorrection = 5.0f;
     public float MaxUpwardAngleCorrection {
-        get { return maxUpwardAngleCorrection; }
-        set { maxUpwardAngleCorrection = value; }
+        get => maxUpwardAngleCorrection;
+        set => maxUpwardAngleCorrection = value;
     }
 
     private Vector3 spellTowerTurretOffset;
     public Vector3 SpellTowerTurretOffset {
-        get { return spellTowerTurretOffset; }
-        set { spellTowerTurretOffset = value; }
+        get => spellTowerTurretOffset;
+        set => spellTowerTurretOffset = value;
     }
 
     private Vector3 instanceSpawnOffset;
     public Vector3 InstanceSpawnOffset {
-        get { return instanceSpawnOffset; }
-        set { instanceSpawnOffset = value; }
+        get => instanceSpawnOffset;
+        set => instanceSpawnOffset = value;
     }
 
     private ProjectileAnimationController animation;
     public ProjectileAnimationController Animation {
-        get { return animation; }
-        set { animation = value; }
+        get => animation;
+        set => animation = value;
     }
 
     public virtual void Animate(float timeSinceSpawned, Transform projectileTransform, Rigidbody projectileRb) {

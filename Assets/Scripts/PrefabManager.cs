@@ -6,26 +6,26 @@ using UnityEngine.EventSystems;
 public class PrefabManager : MonoBehaviour {
     public GameObject damageText;
     public GameObject DamageText {
-        get { return damageText; }
+        get => damageText;
     }
 
     public GameObject enemy;
     public GameObject Enemy {
-        get { return enemy; }
+        get => enemy;
     }
 
     public GameObject fireball;
     public GameObject Fireball {
-        get { return fireball; }
+        get => fireball;
     }
 
     public GameObject magicMissile;
     public GameObject MagicMissile {
-        get { return magicMissile; }
+        get => magicMissile;
     }
 
     public GameObject tower;
     public GameObject Tower {
-        get { return tower; }
+        get => tower;
     }
 }

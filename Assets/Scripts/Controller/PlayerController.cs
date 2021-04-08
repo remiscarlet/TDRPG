@@ -15,10 +15,12 @@ public class PlayerController : MonoBehaviour {
 
     private UIRaycasterUtil shopMenuRaycastUtil;
     private PlayerState playerState;
+    private TowerManager towerManager;
 
     void Start() {
         shopMenuRaycastUtil = ReferenceManager.ShopMenuRaycastUtilComponent;
         playerState = ReferenceManager.PlayerStateComponent;
+        towerManager = ReferenceManager.TowerManagerComponent;
 
         playerRb = GetComponent<Rigidbody>();
         shootingTip = GameObject.Find("Shooting Tip");
@@ -41,8 +43,8 @@ public class PlayerController : MonoBehaviour {
         // Rename in the future
 
         if (Input.GetKey(KeyCode.C)) {
-            if (playerState.IsComboingTowers()) {
-                playerState.ClearTowersBeingCombod();
+            if (towerManager.IsMidComboCreation()) {
+                towerManager.ClearTowersBeingCombod(true);
             }
         }
     }

@@ -5,21 +5,21 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour {
     private float projectileDamage;
     public float ProjectileDamage {
-        get { return projectileDamage; }
-        set { projectileDamage = value; }
+        get => projectileDamage;
+        set => projectileDamage = value;
     }
 
     private Spell projectileSpell;
     public Spell ProjectileSpell {
-        get { return projectileSpell; }
-        set { projectileSpell = value; }
+        get => projectileSpell;
+        set => projectileSpell = value;
     }
 
     private bool canSplash;
 
     public bool CanSplash {
-        get { return canSplash; }
-        set { canSplash = value; }
+        get => canSplash;
+        set => canSplash = value;
     }
 
     private float spawnTime;

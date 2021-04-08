@@ -18,6 +18,7 @@ public class ShopController : Interactable {
     private Text LeftSidebarButtonText;
     private Text rightSidebarButtonText;
     private Text priceText;
+    private Text descriptionText;
     private RawImage leftSidebarRawImage;
     private RawImage rightSidebarRawImage;
     private RawImage currSelectedItemRawImage;
@@ -34,14 +35,15 @@ public class ShopController : Interactable {
     void Awake() {
         LeftSidebarButtonText = transform.Find("Menu/ToLeftItem/Button").gameObject.GetComponent<Text>();
         rightSidebarButtonText = transform.Find("Menu/ToRightItem/Button").gameObject.GetComponent<Text>();
-        priceText = transform.Find("Menu/Price").GetComponent<Text>();
+        priceText = transform.Find("Menu/Center/Price").GetComponent<Text>();
+        descriptionText = transform.Find("Menu/Center/Description").GetComponent<Text>();
         leftSidebarTexture = Resources.Load<Texture2D>("Images/Shop/SidebarArrowLeft");
         rightSidebarTexture = Resources.Load<Texture2D>("Images/Shop/SidebarArrowRight");
         noInventoryTexture = Resources.Load<Texture2D>("Images/Shop/NoInventory");
 
         leftSidebarRawImage = transform.Find("Menu/ToLeftItem").gameObject.GetComponent<RawImage>();
         rightSidebarRawImage = transform.Find("Menu/ToRightItem").gameObject.GetComponent<RawImage>();
-        currSelectedItemRawImage = transform.Find("Menu/ItemToBuy").gameObject.GetComponent<RawImage>();
+        currSelectedItemRawImage = transform.Find("Menu/Center/ItemToBuy").gameObject.GetComponent<RawImage>();
 
         shopMenu = transform.Find("Menu").gameObject;
         proximityPrompt = transform.Find("ProximityPrompt").gameObject;
@@ -77,8 +79,10 @@ public class ShopController : Interactable {
             currSelectedItemRawImage.texture = selectedItem.IconTex;
 
             priceText.text = "Price: " + selectedItem.Price;
+            descriptionText.text = "Description:\n" + selectedItem.Description;
         } else {
             priceText.text = "";
+            descriptionText.text = "Description:";
         }
     }
 
