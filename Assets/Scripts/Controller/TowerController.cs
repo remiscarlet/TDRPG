@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.CodeEditor;
 using UnityEngine;
 
 public class TowerController : Interactable
@@ -73,7 +74,6 @@ public class TowerController : Interactable
         MaxUpwardAngleCorrection = ability.MaxUpwardAngleCorrection;
         ShootForce = ability.ShootForce * 1.5f;
         DamagePerHit = ability.DamagePerHit;
-        print($"Just set tower damage to: {ability.DamagePerHit}");
         ShotsPerMinute = ability.ShotsPerMinute;
         TowerRange = ability.TowerShotRange;
     }
@@ -87,9 +87,10 @@ public class TowerController : Interactable
     }
 
     public override void Activate() {
-        IsBeingCombod = true;
-
-        ReferenceManager.PlayerStateComponent.AddToTowerBeingCombod(this);
+        if (Input.GetKey(KeyCode.C)) {
+            IsBeingCombod = true;
+            ReferenceManager.PlayerStateComponent.AddToTowerBeingCombod(this);
+        }
     }
 
     private void FixedUpdate() {
@@ -105,6 +106,10 @@ public class TowerController : Interactable
 
         float singleStep = turretSpinSpeed * Time.deltaTime;
         Vector3 targetPos = TargetingUtils.GetTargetPosWithCompensation(towerHead.transform, closestEnemy, TowerRange, MaxUpwardAngleCorrection);
+        print($"targetPos: {targetPos}");
+        targetPos = TargetingUtils.ApplySpellTowerTurretOffset(towerSpell.SpellTowerTurretOffset, targetPos,
+            towerHead.transform.position, TowerRange);
+        print($"Offset targetPos: {targetPos}");
         Vector3 newDirection = Vector3.RotateTowards(towerHead.transform.forward, targetPos, singleStep, 0.0f);
         Debug.DrawRay(towerHead.transform.position, newDirection, Color.red);
 
@@ -119,6 +124,8 @@ public class TowerController : Interactable
         }
 
         Vector3 targetPos = TargetingUtils.GetTargetPosWithCompensation(towerHead.transform, closestEnemy, TowerRange, MaxUpwardAngleCorrection);
+        targetPos = TargetingUtils.ApplySpellTowerTurretOffset(towerSpell.SpellTowerTurretOffset, targetPos,
+            towerHead.transform.position, TowerRange);
         float angleToTarget = Vector3.Angle(towerHead.transform.forward, targetPos);
         if (angleToTarget < maxAngleDeltaToShootFrom) {
             Shoot(closestEnemy);

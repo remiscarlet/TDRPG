@@ -8,11 +8,21 @@ public class ShopController : Interactable {
     private const float KeyRepeatWaitTime = 0.2f;
     private const float MaxProximityToPrompt = 10.0f;
 
+
+    private GameObject player;
+    private PlayerState playerState;
+    private GameObject shopMenu;
     private GameObject proximityPrompt;
     private Mesh proximityPromptMesh;
 
+    private Text LeftSidebarButtonText;
+    private Text rightSidebarButtonText;
     private Text priceText;
+    private RawImage leftSidebarRawImage;
+    private RawImage rightSidebarRawImage;
     private RawImage currSelectedItemRawImage;
+    private Texture2D leftSidebarTexture;
+    private Texture2D rightSidebarTexture;
     private Texture2D noInventoryTexture;
 
     private List<Purchaseable> shopInventory = new List<Purchaseable>();
@@ -22,9 +32,15 @@ public class ShopController : Interactable {
     public bool IsShopStocked { get; set; } = true;
 
     void Awake() {
+        LeftSidebarButtonText = transform.Find("Menu/ToLeftItem/Button").gameObject.GetComponent<Text>();
+        rightSidebarButtonText = transform.Find("Menu/ToRightItem/Button").gameObject.GetComponent<Text>();
         priceText = transform.Find("Menu/Price").GetComponent<Text>();
+        leftSidebarTexture = Resources.Load<Texture2D>("Images/Shop/SidebarArrowLeft");
+        rightSidebarTexture = Resources.Load<Texture2D>("Images/Shop/SidebarArrowRight");
         noInventoryTexture = Resources.Load<Texture2D>("Images/Shop/NoInventory");
 
+        leftSidebarRawImage = transform.Find("Menu/ToLeftItem").gameObject.GetComponent<RawImage>();
+        rightSidebarRawImage = transform.Find("Menu/ToRightItem").gameObject.GetComponent<RawImage>();
         currSelectedItemRawImage = transform.Find("Menu/ItemToBuy").gameObject.GetComponent<RawImage>();
 
         shopMenu = transform.Find("Menu").gameObject;
@@ -32,18 +48,20 @@ public class ShopController : Interactable {
         proximityPromptMesh = proximityPrompt.GetComponent<MeshFilter>().sharedMesh;
     }
 
-    private GameObject player;
-    private PlayerState playerState;
-    private GameObject shopMenu;
-    // Start is called before the first frame update
+
     private void Start() {
         player = ReferenceManager.PlayerObject;
         playerState = ReferenceManager.PlayerStateComponent;
         shopInventory.Add(new Spells.MagicMissile(ReferenceManager.Prefabs.MagicMissile));
         shopInventory.Add(new Spells.Fireball(ReferenceManager.Prefabs.Fireball));
+
+        leftSidebarRawImage.texture = leftSidebarTexture;
+        rightSidebarRawImage.texture = rightSidebarTexture;
+
+        LeftSidebarButtonText.text = "E"; // TODO: Make input manager
+        rightSidebarButtonText.text = "Q";
     }
 
-    // Update is called once per frame
     private void Update() {
         if (IsPlayerInRange()) {
             OpenShopMenu();

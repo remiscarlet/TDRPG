@@ -53,6 +53,12 @@ public class Spell : Purchaseable {
         set { maxUpwardAngleCorrection = value; }
     }
 
+    private Vector3 spellTowerTurretOffset;
+    public Vector3 SpellTowerTurretOffset {
+        get { return spellTowerTurretOffset; }
+        set { spellTowerTurretOffset = value; }
+    }
+
     private Vector3 instanceSpawnOffset;
     public Vector3 InstanceSpawnOffset {
         get { return instanceSpawnOffset; }

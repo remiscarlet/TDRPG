@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour {
     private UIRaycasterUtil shopMenuRaycastUtil;
     private PlayerState playerState;
 
-    // Start is called before the first frame update
     void Start() {
         shopMenuRaycastUtil = ReferenceManager.ShopMenuRaycastUtilComponent;
         playerState = ReferenceManager.PlayerStateComponent;
@@ -86,7 +85,6 @@ public class PlayerController : MonoBehaviour {
             newRot.z = -1 * eulerRot.z;
         }
 
-        //print($"Correcting tipping by rotating: {newRot} - Orig rot: {eulerRot}");
         transform.Rotate(newRot);
     }
 
@@ -96,7 +94,6 @@ public class PlayerController : MonoBehaviour {
         float hInput = Input.GetAxis("Horizontal");
 
         if (isShiftPressed) {
-            print($"Applying multiplier of {runSpeedup} to force on rb");
             playerRb.AddForce(vInput * runSpeedup * forwardForce * transform.forward, ForceMode.Force);
             playerRb.AddForce(hInput * runSpeedup * forwardForce * transform.right, ForceMode.Force);
         } else {
@@ -119,8 +116,6 @@ public class PlayerController : MonoBehaviour {
                 // Kek.
                 ability.SpawnBaseProjectile(shootingTip.transform, camera.transform.rotation, shootingTipCollider);
             }
-        } else {
-            //print("No ability/item equipped, dummy.");
         }
     }
 

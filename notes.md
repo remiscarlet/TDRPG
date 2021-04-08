@@ -2,7 +2,6 @@
 
 ## Todos
 - Better wave spawn logic
-- Buildable towers
 - Menu?
 - Score/Money/Point system
     - Upgradeable Towers
@@ -19,6 +18,7 @@
     - Each of these "sub animations" should be in their own movements classes. Main projectile animation class loads them in `Start()`. Can program animations in order in projectile anim class with lengths of each anim. Maybe args to the anims to change dir and whatnot - How modular?
     - At this point should prob separate pc and tower projectile animations. Should also prob reorganize classes into folder structure.
 - Why can structs not have unassigned fields? Why is assigning default null not being overriden by Ability setter upon instantiation?
+- Make towers take on same color as spell projectile color for now? Or average the icon colors?
 
 
 ## Design Thoughts

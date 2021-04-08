@@ -23,12 +23,13 @@ namespace Spells {
             MaxUpwardAngleCorrection = 3.0f;
             TowerShotRange = 50.0f;
             IconTex = Resources.Load<Texture2D>("Images/Spells/Fireball");
+            SpellTowerTurretOffset = Vector3.zero;
             Price = 250;
         }
 
-        private float splashMinDist = 0.5f;
-        private float splashMaxDist = 1.0f;
-        private float splashMaxYOffset = 5.0f;
+        private float splashMinDist = 0.1f;
+        private float splashMaxDist = 0.5f;
+        private float splashMaxYOffset = 15.0f;
         private Quaternion GetSplashSpawnRot(Transform parentProjectileTransform, float angle) {
             float yOffsetAngle = Random.Range(-splashMaxYOffset, splashMaxYOffset);
 
