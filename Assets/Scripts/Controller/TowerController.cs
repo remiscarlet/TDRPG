@@ -11,7 +11,7 @@ public class TowerController : Interactable
     private float shootForce;
     public float ShootForce {
         get => shootForce;
-        set {shootForce = value; }
+        set => shootForce = value;
     }
 
     private float damagePerHit;
@@ -48,13 +48,13 @@ public class TowerController : Interactable
 
     private Spell towerSpell;
 
-    public float turretSpinSpeed = 2.0f;
-    public GameObject? projectilePrefab;
-    private SpawnManager? spawnManager = null;
+    public const float TurretSpinSpeed = 2.0f;
+    public GameObject projectilePrefab;
+    private SpawnManager spawnManager;
     private TowerManager towerManager;
-    private GameObject? towerHead = null;
+    private GameObject towerHead;
     private Collider towerHeadCollider;
-    private GameObject? towerTurret = null;
+    private GameObject towerTurret;
     private GameObject comboRing;
     // Start is called before the first frame update
     private void Start() {
@@ -95,17 +95,16 @@ public class TowerController : Interactable
     }
 
     private void FixedUpdate() {
-        AimAtClosestEnemyInRange();
-        ShootIfAimIsClose();
+        towerManager.UpdateTower(this);
     }
 
-    private void AimAtClosestEnemyInRange() {
+    public void AimAtClosestEnemyInRange() {
         GameObject? closestEnemy = TargetingUtils.GetClosestEnemyInRange(towerHead.transform, TowerRange);
         if (closestEnemy == null) {
             return;
         }
 
-        float singleStep = turretSpinSpeed * Time.deltaTime;
+        float singleStep = TurretSpinSpeed * Time.deltaTime;
         Vector3 targetPos = TargetingUtils.GetTargetPosWithCompensation(towerHead.transform, closestEnemy, TowerRange, MaxUpwardAngleCorrection);
         //print($"targetPos: {targetPos}");
         targetPos = TargetingUtils.ApplySpellTowerTurretOffset(towerSpell.SpellTowerTurretOffset, targetPos,
@@ -118,7 +117,7 @@ public class TowerController : Interactable
     }
 
     private float maxAngleDeltaToShootFrom = 3.0f;
-    private void ShootIfAimIsClose() {
+    public void ShootIfAimIsClose() {
         GameObject? closestEnemy = TargetingUtils.GetClosestEnemyInRange(towerHead.transform, TowerRange);
         if (closestEnemy == null) {
             return;
@@ -143,7 +142,7 @@ public class TowerController : Interactable
         return Time.time - lastShotAt;
     }
 
-    private Vector3 projectilePosOffset = new Vector3(-0.039f, -1.15f, 0.05f);
+    private Vector3 projectilePosOffset = Vector3.zero; //new Vector3(-0.039f, -1.15f, 0.05f);
     private void Shoot(GameObject enemy) {
         if (GetWaitTimeBetweenShots() < GetTimeSinceLastShot()) {
             towerSpell.SpawnBaseProjectile(towerTurret.transform, towerHead.transform.rotation, towerHeadCollider);

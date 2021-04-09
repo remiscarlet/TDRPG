@@ -27,7 +27,8 @@
 - Tower types are based on currently equipped ability. If have Fireball equipped, will create a Fireball Tower.
     - Targetting should be configurable (Closest, Farthest, Strongest, Randomized)
     - Tower type is determined by ability, but towers separately have upgradeable levels like "damage", "range", "speed".
-    - However, if ability is upgraded (Say FB1 -> FB2) then towers all also get upgraded at same time.
+    - ~~However, if ability is upgraded (Say FB1 -> FB2) then towers all also get upgraded at same time.~~
+        - Actually, towers always stay at level 1 ability damage. Combos empower towers.
     - Tower Type and Tower Levels should try to avoid overlapping functionality minus damage (Tower damage should be more "bonus" damage?)
 - Ability to use consumables? What kind of consumables?
 - Abilities should be split into "spells" and "abilities". Towers should be called "Spelltowers". Towers can take on spells. Abilities are powerful in their own way but can only be used by pc.
@@ -38,6 +39,11 @@
 - Have enemies target towers and player?
     - Could also have healing/defense oriented towers then.
     - Makes gameplay a bit more interesting rather than shooting defenseless enemies
+- Display information about spelltower being built.
+    - Damage stats
+    - Rate of fire
+    - Range overlay/ground indicator
+    - etc.
 
 ## Elements:
 - Fire
@@ -57,15 +63,20 @@
 - Chilled: Slowed, DoT
 - Poisoned: DoT
 
+## Towers:
+| Spell Type    | Base Damage | Rate of Fire | Splash Damage | Total Damage        | Projectiles |
+|---------------|-------------|--------------|---------------|---------------------|-------------|
+| Magic Missile | 50          | 300/min      | N/A           | 100 dps             | 1x proj. impulsed upwards then switch to homing on closest target |
+| Fireball      | 150         | 60/min       | 25 x 10       | 150 dps + 150 sp./s | 1x large blue proj. lobbed toward target with 25x splash objs spawned on contact with enemy |
+
+
+## Combos:
+| Magic Missile | Fireball | | Combo            | | Base Damage | Rate of Fire | Splash           | Total Damage        | Projectiles |
+|---------------|----------|-|------------------|-|-------------|--------------|------------------|---------------------|-------------|
+| 1x            | 1x       | | Fiery Missiles   | | 4 x 125     | 60/min       | N/A              | 500 dps             | 4x red missiles shoot upward in spiral then home in on target |
+| 1x            | 2x       | | Homing Fireballs | | 2 x 300     | 60/min       | 29 x 12 per proj | 600 dps + 480 sp./s | 2x fireballs shoot in v formation backwards at a high angle then home in on target. Fireball splash on contact |
+| 2x            | 1x       | |                  | |             |              |                  |                     | |
+
 ## Thoughts
 - How many Scenes? Should tower building be separate scene?
-
-## Ideas
-- Three basic towers:
-    - Single shot, weak, fast (Tower1)
-    - Single shot, strong, pierce, medium
-    - Single shot, medium, aoe, slow, DoT
-- Three classes:
-    - Warrior - Melee/Med/Cleave
-    - Ranger - Range/Slow/Pierce
-    - Wizard - Range/Fast/Single Target
+- :thinking: Could log stats about splash projectiles to make data for analyzing true splash dps...

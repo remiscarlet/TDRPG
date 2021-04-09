@@ -6,9 +6,13 @@ using UnityEngine;
 
 public class TowerManager : MonoBehaviour {
     private List<GameObject> towers;
-    private Dictionary<GameObject, TowerController> towerToController;
-    private Dictionary<TowerController, GameObject> controllerToTower;
-    private Dictionary<GameObject, TowerCombo> towerToCombo;
+
+    [System.NonSerialized]
+    public Dictionary<GameObject, TowerController> towerToController;
+    [System.NonSerialized]
+    public Dictionary<TowerController, GameObject> controllerToTower;
+    [System.NonSerialized]
+    public Dictionary<GameObject, TowerCombo> towerToCombo;
 
     private List<TowerCombo> combos;
     private List<TowerController> towersBeingCombod; // Only ever be len 1?
@@ -26,6 +30,16 @@ public class TowerManager : MonoBehaviour {
         towerToController = new Dictionary<GameObject, TowerController>();
         controllerToTower = new Dictionary<TowerController, GameObject>();
         // Auto search for premade towers?
+    }
+
+    private void Update() {
+        DrawComboGroupIndicators();
+    }
+
+    private void DrawComboGroupIndicators() {
+        foreach (TowerCombo combo in combos) {
+            combo.DrawIndicators();
+        }
     }
 
     public TowerCombo CreateCombo(GameObject tower1, GameObject tower2) {
@@ -98,5 +112,15 @@ public class TowerManager : MonoBehaviour {
 
     public bool IsTowerMidComboCreation(TowerController towerController) {
         return towersBeingCombod.Contains(towerController);
+    }
+
+    public void UpdateTower(TowerController controller) {
+        if (IsTowerInCombo(controller)) {
+
+        }
+        else {
+            controller.AimAtClosestEnemyInRange();
+            controller.ShootIfAimIsClose();
+        }
     }
 }
