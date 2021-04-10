@@ -57,6 +57,11 @@ public class TowerSlotController : Interactable {
         if (!IsOccupied && IsBeingLookedAt) {
             ShowSilhouette();
         } else {
+            if (gameObject.name == "TowerSlot1") {
+                print($"IsOccupied: {IsOccupied}");
+                print($"IsBeingLookedAt: {IsBeingLookedAt}");
+            }
+
             HideSilhouette();
         }
     }

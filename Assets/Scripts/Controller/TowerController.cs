@@ -56,7 +56,7 @@ public class TowerController : Interactable
     private Collider towerHeadCollider;
     private GameObject towerTurret;
     private GameObject comboRing;
-    // Start is called before the first frame update
+
     private void Start() {
         spawnManager = ReferenceManager.SpawnManagerComponent;
         towerManager = ReferenceManager.TowerManagerComponent;
@@ -80,22 +80,10 @@ public class TowerController : Interactable
         TowerRange = ability.TowerShotRange;
     }
 
-    private void Update() {
-        UpdateComboRings();
-    }
-
-    private void UpdateComboRings() {
-        comboRing.SetActive(IsBeingCombod);
-    }
-
     public override void Activate() {
         if (Input.GetKey(KeyCode.F) && !towerManager.IsTowerInCombo(this) && !towerManager.IsTowerMidComboCreation(this)) {
             towerManager.AddToTowersBeingCombod(this);
         }
-    }
-
-    private void FixedUpdate() {
-        towerManager.UpdateTower(this);
     }
 
     public void AimAtClosestEnemyInRange() {
@@ -132,6 +120,17 @@ public class TowerController : Interactable
         }
     }
 
+    private void Update() {
+        UpdateComboRings();
+    }
+
+    private void FixedUpdate() {
+        // Tower physics related updates (ie, aiming and shooting) are handled by TowerManager to account for combos
+    }
+
+    private void UpdateComboRings() {
+        comboRing.SetActive(IsBeingCombod);
+    }
 
     private float GetWaitTimeBetweenShots() {
         return 60.0f / ShotsPerMinute; // Seconds

@@ -6,11 +6,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Structs {
+    // Maybe a full class and not a struct :-/
     public struct TowerCombo {
         public TowerCombo(GameObject firstTower, GameObject secondTower) {
             towersIncluded = new List<GameObject>();
             AddTowerToCombo(firstTower);
             AddTowerToCombo(secondTower);
+
+            DetermineComboType();
+        }
+
+
+        private void DetermineComboType() {
+            // ComboManager?
+        }
+
+        public void ComboFixedUpdate() {
+            // Generate projectiles for combo type
         }
 
         private List<GameObject> towersIncluded;

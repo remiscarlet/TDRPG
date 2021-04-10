@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Structs;
 using UnityEngine;
 
@@ -34,6 +36,43 @@ public class TowerManager : MonoBehaviour {
 
     private void Update() {
         DrawComboGroupIndicators();
+    }
+
+    private void FixedUpdate() {
+        // Update combo towers
+        Dictionary<GameObject, bool> towersAlreadyUpdated = new Dictionary<GameObject, bool>();
+        foreach (GameObject tower in towers) {
+            towersAlreadyUpdated.Add(tower, false);
+        }
+
+        foreach (TowerCombo combo in combos) {
+            combo.ComboFixedUpdate();
+            List<GameObject> towersInCombo = combo.GetTowers;
+            foreach (GameObject towerInCombo in towersInCombo) {
+                if (!towersAlreadyUpdated.ContainsKey(towerInCombo)) {
+                    throw new Exception(
+                        $"Encountered tower in combo that was not known to TowerManager. This should be impossible. Got: `{towerInCombo}`");
+                }
+                towersAlreadyUpdated[towerInCombo] = true;
+            }
+        }
+
+        // Update non-combo towers
+        List<GameObject> towersNotInCombos = (
+            from tower in towersAlreadyUpdated
+            where !tower.Value
+            select tower.Key
+            ).ToList(); // :-/ This tuple unpacking is kinda gross
+
+        foreach (GameObject tower in towersNotInCombos) {
+            TowerController towerController = towerToController[tower];
+            UpdateTower(towerController);
+        }
+    }
+
+    private void UpdateTower(TowerController controller) {
+        controller.AimAtClosestEnemyInRange();
+        controller.ShootIfAimIsClose();
     }
 
     private void DrawComboGroupIndicators() {
@@ -114,13 +153,4 @@ public class TowerManager : MonoBehaviour {
         return towersBeingCombod.Contains(towerController);
     }
 
-    public void UpdateTower(TowerController controller) {
-        if (IsTowerInCombo(controller)) {
-
-        }
-        else {
-            controller.AimAtClosestEnemyInRange();
-            controller.ShootIfAimIsClose();
-        }
-    }
 }

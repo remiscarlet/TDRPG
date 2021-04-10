@@ -19,6 +19,8 @@
     - At this point should prob separate pc and tower projectile animations. Should also prob reorganize classes into folder structure.
 - Why can structs not have unassigned fields? Why is assigning default null not being overriden by Ability setter upon instantiation?
 - Make towers take on same color as spell projectile color for now? Or average the icon colors?
+- Projectile rotation should face velocity vector direction
+- Projectile animations should all have "scaleToDist" arg. Particularly impulsefwd at start for MM animations make less sense the closer the enemy due to the constant impulse force at start causing projectiles against close enemies to overshoot/miss
 
 
 ## Design Thoughts
@@ -59,7 +61,7 @@
 ## Status/Effects:
 - Statuses have "levels" in terms of severity. Eg, Burning1, Burning2, Shocked3, etc. Max level? Match to ability level?
 - Burning: DoT
-- Shocked: Probabilty of becoming immobilized temporarily
+- Shocked: Probability of becoming immobilized temporarily
 - Chilled: Slowed, DoT
 - Poisoned: DoT
 
