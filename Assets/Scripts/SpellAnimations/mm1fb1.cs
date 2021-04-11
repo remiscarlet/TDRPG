@@ -2,10 +2,10 @@
 using UnityEngine;
 
 namespace SpellAnimations {
-    public class MagicMissile : ProjectileAnimationController {
+    public class mm1fb1 : ProjectileAnimationController {
         protected override void SetAnimation() {
             animations = new ProjectileAnimation[] {
-                new ProjectileAnimations.ImpulseFwdAtStart(0.5f, 20.0f),
+                new ProjectileAnimations.SpiralUpwards(3.0f, 30.0f),
                 new ProjectileAnimations.HomeAtClosestTarget(Mathf.Infinity, 50.0f),
             };
         }

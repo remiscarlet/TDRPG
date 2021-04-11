@@ -26,6 +26,33 @@ public class ComboTowerController : MonoBehaviour {
         comboTowerTurretCollider = comboTowerTurret.GetComponent<Collider>();
     }
 
+    private void Start() {
+        MoveToCenterOfAllTowers();
+    }
+
+    private float yOffset = 10.0f;
+    private void MoveToCenterOfAllTowers() {
+        float x = 0.0f;
+        float y = 0.0f;
+        float z = 0.0f;
+
+        List<Vector3> positions = (
+            from controller in controllersIncluded
+            select controller.gameObject.transform.position
+            ).ToList();
+
+        foreach (Vector3 pos in positions) {
+            x += pos.x;
+            y += pos.y;
+            z += pos.z;
+        }
+
+        int numTowers = positions.Count;
+        Vector3 newCenter = new Vector3(x / numTowers, y / numTowers + yOffset, z / numTowers);
+
+        transform.position = newCenter;
+    }
+
     public void AddFirstTwoTowers(TowerController firstController, TowerController secondController) {
         AddTowerToCombo(firstController);
         AddTowerToCombo(secondController);

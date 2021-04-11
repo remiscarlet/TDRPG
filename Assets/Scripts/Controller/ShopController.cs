@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ShopController : Interactable {
-    private const float PurchaseCooldown = 2.0f;
+    private const float PurchaseCooldown = 1.0f;
     private const float KeyRepeatWaitTime = 0.2f;
     private const float MaxProximityToPrompt = 10.0f;
 
