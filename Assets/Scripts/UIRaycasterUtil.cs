@@ -18,6 +18,14 @@ public class UIRaycasterUtil : MonoBehaviour {
         m_EventSystem = ReferenceManager.EventSystemComponent;
     }
 
+    /// <summary>
+    /// Returns if the center of the screen is facing a Canvas UI element.
+    ///
+    /// This is separate from physics raycast checks due to UI elems needing
+    /// to explicitly use GraphicRaycaster.Raycast and not Physics.Raycast
+    /// </summary>
+    /// <param name="hitGameObject"></param>
+    /// <returns>True if center of screen is facing a UI elem. False otherwise. </returns>
     public bool IsPlayerFacingUIElem(out GameObject hitGameObject) {
         if (m_EventSystem == null) {
             // Awake() and Start() aren't called until gameobject is enabled seems like

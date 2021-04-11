@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Base class/interface for individual <c>ProjectileAnimation</c> derivatives.
+/// </summary>
 public class ProjectileAnimation {
     public virtual float GetDuration() {
         throw new System.Exception("Unimplemented Exception");

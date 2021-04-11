@@ -16,7 +16,6 @@ namespace Structs {
             DetermineComboType();
         }
 
-
         private void DetermineComboType() {
             // ComboManager?
         }
@@ -30,6 +29,12 @@ namespace Structs {
             get => towersIncluded;
         }
 
+        /// <summary>
+        /// Draw the *line* between each combo ring indicator.
+        ///
+        /// The rings themselves are drawn by the <c>TowerController</c> while this method only
+        /// draws the lines that connect each combo ring.
+        /// </summary>
         public void DrawIndicators() {
             List<GameObject> towers = GetTowers;
             GameObject firstTower = towers.First();
@@ -44,13 +49,26 @@ namespace Structs {
             }
         }
 
+        /// <summary>
+        /// Draw rings and line
+        /// </summary>
+        /// <param name="tower1"></param>
+        /// <param name="tower2"></param>
         private void DrawIndicator(GameObject tower1, GameObject tower2) {
             TowerController tower1Controller = ReferenceManager.TowerManagerComponent.towerToController[tower1];
             TowerController tower2Controller = ReferenceManager.TowerManagerComponent.towerToController[tower2];
         }
 
-        public void AddTowerToCombo(GameObject tower) {
+        /// <summary>
+        /// Add an additional tower to this combo if valid.
+        /// </summary>
+        /// <param name="tower"></param>
+        /// <returns>Bool representing if addition was successful</returns>
+        public bool AddTowerToCombo(GameObject tower) {
+            // TODO: Invalid additions should return false. Ie, need ComboManager.
             towersIncluded.Add(tower);
+
+            return true;
         }
     }
 }

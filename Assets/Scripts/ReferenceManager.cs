@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// This is a singleton class that houses references to a bunch of commonly used
+/// components, gameobjects, etc etc.
+///
+/// Calls to GetComponent() or otherwise searching for the right GameObject to call it on can be expensive.
+/// Use this static class to have a quick and cheap way to reference common objects.
+/// </summary>
 public class ReferenceManager : MonoBehaviour {
     static ReferenceManager instance;
     void Awake() {
@@ -16,9 +23,6 @@ public class ReferenceManager : MonoBehaviour {
         playerObject = GameObject.Find("Player");
         cameraObject = playerObject.transform.Find("Player Head/Main Camera").gameObject;
         playerStateComponent = playerObject.GetComponent<PlayerState>();
-        print("ReferenceManager");
-        print(playerObject);
-        print(playerStateComponent);
 
         spawnManagerObject = GameObject.Find("SpawnManager");
         spawnManagerComponent = spawnManagerObject.GetComponent<SpawnManager>();

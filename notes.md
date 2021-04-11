@@ -21,7 +21,8 @@
 - Make towers take on same color as spell projectile color for now? Or average the icon colors?
 - Projectile rotation should face velocity vector direction
 - Projectile animations should all have "scaleToDist" arg. Particularly impulsefwd at start for MM animations make less sense the closer the enemy due to the constant impulse force at start causing projectiles against close enemies to overshoot/miss
-
+- `ComboTower` should probably get upgraded into a class and not a struct `ComboManager`? So many managers...
+- Code organization refactor. Controller, Managers, etc. More/nested folders?
 
 ## Design Thoughts
 - Abilities are bought at the store and can individually be upgraded.

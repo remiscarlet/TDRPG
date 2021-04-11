@@ -30,6 +30,7 @@ public class TowerSlotController : Interactable {
         foreach (Transform child in transform) {
             // Account for pre-populated towers
             if (child.CompareTag("Tower")) {
+                print("AA123 - IsOccupied is true by via Start()");
                 IsOccupied = true;
             }
         }
@@ -48,7 +49,7 @@ public class TowerSlotController : Interactable {
                 MaxInteractDistance,
                 Layers.FriendlyProjectilesMask)) {
 
-                IsBeingLookedAt = MonoBehaviourUtils.IsChild(gameObject, hit.transform.gameObject);
+                IsBeingLookedAt = MonoBehaviourUtils.IsChildOrSelf(gameObject, hit.transform.gameObject);
             } else {
                 IsBeingLookedAt = false;
             }
@@ -84,6 +85,7 @@ public class TowerSlotController : Interactable {
 
         towerManager.CreateTower(equippedAbility, transform);
         IsOccupied = true;
+        print("AA234 - Attempted to create tower and set IsOccupied to true.");
     }
 
     private void ShowSilhouette() {

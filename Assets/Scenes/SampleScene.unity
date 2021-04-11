@@ -810,6 +810,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2028016231762725719, guid: 63733a8d05bfb7643bb2936adfcbd49f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3904889072422727596, guid: 63733a8d05bfb7643bb2936adfcbd49f, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -856,11 +860,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4944130981367957788, guid: 63733a8d05bfb7643bb2936adfcbd49f, type: 3}
       propertyPath: m_Name
-      value: TowerSlot
+      value: TowerSlot1
       objectReference: {fileID: 0}
     - target: {fileID: 6774319396695842843, guid: 63733a8d05bfb7643bb2936adfcbd49f, type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6774319396695842843, guid: 63733a8d05bfb7643bb2936adfcbd49f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.14
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 63733a8d05bfb7643bb2936adfcbd49f, type: 3}

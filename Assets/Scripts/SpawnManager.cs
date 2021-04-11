@@ -24,6 +24,10 @@ public class SpawnManager : MonoBehaviour
     }
 
     private float enemySpawnDelay = 1.0f;
+    /// <summary>
+    /// Do the actual spawning of the wave.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator SpawnWave() {
         enemiesKilled = 0;
         // For now just always spawn same num enemies as wave * 2
@@ -41,16 +45,21 @@ public class SpawnManager : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// Returns a random enemy spawn location on the map.
+    /// </summary>
+    /// <returns>The <c>Transform</c> of the spawn location prefab.</returns>
     private Transform GetRandomSpawnLocation() {
         GameObject spawnLoc = spawnLocations[Random.Range(0, spawnLocations.Length)];
         return spawnLoc.transform;
     }
 
-    // Update is called once per frame
-    void Update() {
-
-    }
-
+    /// <summary>
+    /// Remove an enemy GameObject from the list of live enemies.
+    ///
+    /// If every enemy has been killed, start next wave.
+    /// </summary>
+    /// <param name="enemy"></param>
     public void RemoveDeadEnemy(GameObject enemy) {
         enemiesKilled += 1;
         enemiesAlive.Remove(enemy);
@@ -60,7 +69,11 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+
     private float nextWaveSpawnDelay = 5.0f;
+    /// <summary>
+    /// Spawn next wave after delay.
+    /// </summary>
     private IEnumerator SpawnNextWave() {
         WaveNum += 1;
         // Other stuff?
@@ -68,6 +81,10 @@ public class SpawnManager : MonoBehaviour
         yield return StartCoroutine(SpawnWave());
     }
 
+    /// <summary>
+    /// Return all enemies still alive on map.
+    /// </summary>
+    /// <returns></returns>
     public List<GameObject> GetAliveEnemies() {
         return enemiesAlive;
     }

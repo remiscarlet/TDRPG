@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Similar to <c>ReferenceManager</c> but for prefabs.
+///
+/// This class is used via ReferenceManager.
+/// Ie, <c>ReferenceManager.Prefabs.DamageText</c>
+/// NOT, <c>PrefabManager.DamageText</c>
+/// </summary>
 public class PrefabManager : MonoBehaviour {
     public GameObject damageText;
     public GameObject DamageText {

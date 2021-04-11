@@ -71,18 +71,56 @@ public class Spell : Purchaseable {
         set => animation = value;
     }
 
+    /// <summary>
+    /// This method is called once per <c>FixedUpdate()</c> and should update any physics related movements, ie "animations",
+    /// for this projectile.
+    ///
+    /// Animations should generally be getting handled via the <c>AnimationController</c> derivatives.
+    /// </summary>
+    /// <param name="timeSinceSpawned"></param>
+    /// <param name="projectileTransform"></param>
+    /// <param name="projectileRb"></param>
     public virtual void Animate(float timeSinceSpawned, Transform projectileTransform, Rigidbody projectileRb) {
         Animation.Animate(timeSinceSpawned, projectileTransform, projectileRb);
     }
 
+    /// <summary>
+    /// Called when the projectile hits a target on the <c>Enemy</c> layer and the spell has <c>CanSplash</c> set to true.
+    ///
+    /// Use this method to activate any post-impact logic such as creating additional projectiles or applying status effects.
+    /// TODO: Probably means I should move damage logic here?
+    /// </summary>
+    /// <param name="parentProjectileTransform"></param>
+    /// <param name="splashInvokerCollider"></param>
     public virtual void OnProjectileHit(Transform parentProjectileTransform, Collider splashInvokerCollider) { }
 
+    /// <summary>
+    /// Spawn the initial projectiles - ie non-splash/non-secondary projectiles.
+    ///
+    /// One might override this method when more than a single projectile is spawned.
+    /// One might not use this method when instantiating for example splash projectiles which should be created via OnProjectileHit()
+    /// </summary>
+    /// <param name="selfTransform"></param>
+    /// <param name="enemyDir"></param>
+    /// <param name="spawnerCollider"></param>
+    /// <returns></returns>
     public virtual GameObject SpawnBaseProjectile(Transform selfTransform, Quaternion enemyDir, Collider spawnerCollider) {
         return SpawnInstance(selfTransform.position + InstanceSpawnOffset, enemyDir, DamagePerHit, spawnerCollider, CanSplash);
     }
 
+    /// <summary>
+    /// Spawn the spell projectile.
+    ///
+    /// This method handles creation of projectiles and settings its various states.
+    /// </summary>
+    /// <param name="spawnLoc"></param>
+    /// <param name="spawnRot"></param>
+    /// <param name="damage"></param>
+    /// <param name="spawnerCollider"></param>
+    /// <param name="canSplash"></param>
+    /// <returns>The spawned projectile <c>GameObject</c></returns>
     protected GameObject SpawnInstance(Vector3 spawnLoc, Quaternion spawnRot, float damage, Collider spawnerCollider, bool canSplash) {
-        Debug.Log($"Spawning: {spawnLoc}, {spawnRot}, {damage}, {shootForce}, {spawnerCollider}");
+        //Debug.Log($"Spawning: {spawnLoc}, {spawnRot}, {damage}, {shootForce}, {spawnerCollider}");
         GameObject obj = Object.Instantiate(InstancePrefab, spawnLoc, spawnRot);
         obj.layer = Layers.FriendlyProjectiles;
 
