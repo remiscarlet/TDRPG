@@ -16,6 +16,7 @@ public class ReferenceManager : MonoBehaviour {
         instance = this;
 
         prefabs = GetComponent<PrefabManager>();
+        comboTypes = GetComponent<ComboTypeManager>();
 
         eventSystemComponent = GameObject.Find("EventSystem").GetComponent<EventSystem>();
         shopMenuRaycastUtilComponent = GameObject.Find("Environment/Shop/Menu").GetComponent<UIRaycasterUtil>();
@@ -31,6 +32,7 @@ public class ReferenceManager : MonoBehaviour {
     }
 
     [System.NonSerialized] public PrefabManager prefabs;
+    [System.NonSerialized] public ComboTypeManager comboTypes;
     [System.NonSerialized] public EventSystem eventSystemComponent;
     [System.NonSerialized] public UIRaycasterUtil shopMenuRaycastUtilComponent;
 
@@ -45,6 +47,10 @@ public class ReferenceManager : MonoBehaviour {
 
     public static PrefabManager Prefabs {
         get => instance.prefabs;
+    }
+
+    public static ComboTypeManager ComboTypes {
+        get => instance.comboTypes;
     }
 
     public static EventSystem EventSystemComponent {

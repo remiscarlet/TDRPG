@@ -48,10 +48,15 @@ public class TowerController : Interactable
 
     private Spell towerSpell;
 
+    public Spell TowerSpell {
+        get => towerSpell;
+    }
+
     public const float TurretSpinSpeed = 2.0f;
     public GameObject projectilePrefab;
     private SpawnManager spawnManager;
     private TowerManager towerManager;
+    private GameObject towerObject;
     private GameObject towerHead;
     private Collider towerHeadCollider;
     private GameObject towerTurret;
@@ -61,6 +66,7 @@ public class TowerController : Interactable
         spawnManager = ReferenceManager.SpawnManagerComponent;
         towerManager = ReferenceManager.TowerManagerComponent;
 
+        towerObject = gameObject;
         comboRing = transform.Find("ComboRing").gameObject;
         towerHead = transform.Find("TowerHead").gameObject;
         towerHeadCollider = towerHead.GetComponent<Collider>();

@@ -83,9 +83,10 @@ public class TowerSlotController : Interactable {
             return;
         }
 
-        towerManager.CreateTower(equippedAbility, transform);
-        IsOccupied = true;
-        print("AA234 - Attempted to create tower and set IsOccupied to true.");
+        if (towerManager.CreateTower(equippedAbility, transform)) {
+            IsOccupied = true;
+            print("AA234 - Attempted to create tower and set IsOccupied to true.");
+        }
     }
 
     private void ShowSilhouette() {

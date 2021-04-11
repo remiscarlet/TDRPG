@@ -3,32 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Structs;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class TowerManager : MonoBehaviour {
-    private List<GameObject> towers;
+    private List<TowerController> towerControllers;
 
     [System.NonSerialized]
     public Dictionary<GameObject, TowerController> towerToController;
     [System.NonSerialized]
     public Dictionary<TowerController, GameObject> controllerToTower;
     [System.NonSerialized]
-    public Dictionary<GameObject, TowerCombo> towerToCombo;
+    public Dictionary<TowerController, ComboTowerController> controllerToCombo;
 
-    private List<TowerCombo> combos;
+    private List<ComboTowerController> combos;
     private List<TowerController> towersBeingCombod; // Only ever be len 1?
 
+    private ComboTypeManager comboTypeManager;
     private GameObject towerPrefab;
     private PlayerState playerState;
     private void Start() {
         towersBeingCombod = new List<TowerController>();
+        comboTypeManager = ReferenceManager.ComboTypes;
         towerPrefab = ReferenceManager.Prefabs.Tower;
         playerState = ReferenceManager.PlayerStateComponent;
-        towers = new List<GameObject>();
-        combos = new List<TowerCombo>();
+        towerControllers = new List<TowerController>();
+        combos = new List<ComboTowerController>();
 
-        towerToCombo = new Dictionary<GameObject, TowerCombo>();
+        controllerToCombo = new Dictionary<TowerController, ComboTowerController>();
         towerToController = new Dictionary<GameObject, TowerController>();
         controllerToTower = new Dictionary<TowerController, GameObject>();
         // Auto search for premade towers?
@@ -47,32 +49,31 @@ public class TowerManager : MonoBehaviour {
     /// <exception cref="Exception">Reached an impossible state</exception>
     private void FixedUpdate() {
         // Update combo towers
-        Dictionary<GameObject, bool> towersAlreadyUpdated = new Dictionary<GameObject, bool>();
-        foreach (GameObject tower in towers) {
-            towersAlreadyUpdated.Add(tower, false);
+        Dictionary<TowerController, bool> towerControllersAlreadyUpdated = new Dictionary<TowerController, bool>();
+        foreach (TowerController towerController in towerControllers) {
+            towerControllersAlreadyUpdated.Add(towerController, false);
         }
 
-        foreach (TowerCombo combo in combos) {
+        foreach (ComboTowerController combo in combos) {
             combo.ComboFixedUpdate();
-            List<GameObject> towersInCombo = combo.GetTowers;
-            foreach (GameObject towerInCombo in towersInCombo) {
-                if (!towersAlreadyUpdated.ContainsKey(towerInCombo)) {
+            List<TowerController> controllersInCombo = combo.GetTowerControllers;
+            foreach (TowerController controllerInCombo in controllersInCombo) {
+                if (!towerControllersAlreadyUpdated.ContainsKey(controllerInCombo)) {
                     throw new Exception(
-                        $"Encountered tower in combo that was not known to TowerManager. This should be impossible. Got: `{towerInCombo}`");
+                        $"Encountered tower in combo that was not known to TowerManager. This should be impossible. Got: `{controllerInCombo}`");
                 }
-                towersAlreadyUpdated[towerInCombo] = true;
+                towerControllersAlreadyUpdated[controllerInCombo] = true;
             }
         }
 
         // Update non-combo towers
-        List<GameObject> towersNotInCombos = (
-            from tup in towersAlreadyUpdated
+        List<TowerController> towersControllersNotInCombos = (
+            from tup in towerControllersAlreadyUpdated
             where !tup.Value
             select tup.Key
             ).ToList(); // :-/ This tuple unpacking is kinda gross
 
-        foreach (GameObject tower in towersNotInCombos) {
-            TowerController towerController = towerToController[tower];
+        foreach (TowerController towerController in towersControllersNotInCombos) {
             UpdateTower(towerController);
         }
     }
@@ -90,31 +91,32 @@ public class TowerManager : MonoBehaviour {
     /// Draw the yellow combo indicator rings
     /// </summary>
     private void DrawComboGroupIndicators() {
-        foreach (TowerCombo combo in combos) {
+        foreach (ComboTowerController combo in combos) {
             combo.DrawIndicators();
         }
     }
 
     /// <summary>
-    /// Given two towers, will return a <c>TowerCombo</c> with just these two towers.
-    /// Subsequent towers for 2+ combos should be added using TowerCombo.AddTowerToCombo()
+    /// Given two towers, will return a <c>ComboTowerController</c> with just these two towers.
+    /// Subsequent towers for 2+ combos should be added using ComboTowerController.AddTowerToCombo()
     /// </summary>
-    /// <param name="tower1"></param>
-    /// <param name="tower2"></param>
-    /// <returns>The newly created <c>TowerCombo</c></returns>
-    public TowerCombo CreateCombo(GameObject tower1, GameObject tower2) {
-        TowerCombo combo = new TowerCombo(tower1, tower2);
+    /// <param name="towerController1"></param>
+    /// <param name="towerController2"></param>
+    /// <returns>The newly created <c>ComboTowerController</c></returns>
+    [CanBeNull]
+    private ComboTowerController CreateCombo(TowerController towerController1, TowerController towerController2) {
+        ComboTowerController combo = new ComboTowerController(towerController1, towerController2);
         combos.Add(combo);
 
-        towerToCombo.Add(tower1, combo);
-        towerToCombo.Add(tower2, combo);
+        controllerToCombo.Add(towerController1, combo);
+        controllerToCombo.Add(towerController2, combo);
 
         return combo;
     }
 
     /// <summary>
     /// Given a transform and material, will recursively apply <c>spellMaterial</c> to any and
-    /// all renderer components on transform and its children transforms.
+    /// all renderer components on <c>transform</c> and its children transforms.
     /// </summary>
     /// <param name="transform"></param>
     /// <param name="spellMaterial"></param>
@@ -153,7 +155,7 @@ public class TowerManager : MonoBehaviour {
         TowerController towerController = tower.GetComponent<TowerController>();
         towerController.SetAbility(spell);
 
-        towers.Add(tower);
+        towerControllers.Add(towerController);
         towerToController.Add(tower, towerController);
         controllerToTower.Add(towerController, tower);
 
@@ -179,16 +181,22 @@ public class TowerManager : MonoBehaviour {
         tower.IsBeingCombod = true;
 
         if (towersBeingCombod.Count > 1) {
-            GameObject tower0 = controllerToTower[towersBeingCombod[0]];
-            GameObject tower1 = controllerToTower[towersBeingCombod[1]];
+            TowerController towerController0 = towersBeingCombod[0];
+            TowerController towerController1 = towersBeingCombod[1];
 
-            GameObject additionalTower;
-            TowerCombo combo = CreateCombo(tower0, tower1);
+            TowerController additionalTower;
+            ComboTowerController? combo = CreateCombo(towerController0, towerController1);
+            if (combo == null) {
+                // Invalid combo atm. Continue keeping things in "mid combo" state.
+                // TODO: How to handle first two towers being valid but subsequent towers after 2nd tower making invalid?
+                return;
+            }
+
             for (int i = 2; i < towersBeingCombod.Count; i++) {
-                additionalTower = controllerToTower[towersBeingCombod[i]];
+                additionalTower = towersBeingCombod[i];
                 combo.AddTowerToCombo(additionalTower);
             }
-            print($"TowerCombo: {combo}");
+            print($"ComboTowerController: {combo}");
 
             ClearTowersBeingCombod(false);
         }
@@ -215,11 +223,21 @@ public class TowerManager : MonoBehaviour {
     /// <returns></returns>
     public bool IsTowerInCombo(TowerController towerController) {
         GameObject tower = controllerToTower[towerController];
-        return towerToCombo.ContainsKey(tower);
+        return controllerToCombo.ContainsKey(towerController);
     }
 
     /// <summary>
-    /// Is this <c>TowerController</c> currently selected as part of a new potential combo?
+    /// Is this <c>GameObject</c> a part of an already existing combo?
+    /// </summary>
+    /// <param name="towerController"></param>
+    /// <returns></returns>
+    public bool IsTowerInCombo(GameObject tower) {
+        TowerController towerController = towerToController[tower];
+        return IsTowerInCombo(towerController);
+    }
+
+    /// <summary>
+    /// Is this <c>TowerController</c> currently selected as part of a new combo?
     /// </summary>
     /// <param name="towerController"></param>
     /// <returns></returns>
