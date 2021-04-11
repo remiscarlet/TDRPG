@@ -21,7 +21,7 @@ public class PlayerState : MonoBehaviour {
         print("Initializing PlayerState");
 
         hotbar = new Hotbar();
-        points = 1000;
+        points = 1500;
     }
 
     public void Update() {

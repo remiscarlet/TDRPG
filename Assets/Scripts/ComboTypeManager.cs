@@ -31,7 +31,9 @@ public class ComboTypeManager : MonoBehaviour {
         }
 
         if (comboClassName != "") {
-            Type type = Type.GetType($"ComboType.{comboClassName}");
+            print($"ComboTypes.{comboClassName}");
+            Type type = Type.GetType($"ComboTypes.{comboClassName}");
+            print(type);
             return (ComboType) Activator.CreateInstance(type);
         } else {
             return null;

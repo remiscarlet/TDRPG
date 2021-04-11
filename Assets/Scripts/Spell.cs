@@ -99,13 +99,15 @@ public class Spell : Purchaseable {
     ///
     /// One might override this method when more than a single projectile is spawned.
     /// One might not use this method when instantiating for example splash projectiles which should be created via OnProjectileHit()
+    ///
+    /// TODO: Account for multi projectile spawning. Current return type assumes only one projectile.
     /// </summary>
-    /// <param name="selfTransform"></param>
+    /// <param name="spawnerTransform"></param>
     /// <param name="enemyDir"></param>
     /// <param name="spawnerCollider"></param>
     /// <returns></returns>
-    public virtual GameObject SpawnBaseProjectile(Transform selfTransform, Quaternion enemyDir, Collider spawnerCollider) {
-        return SpawnInstance(selfTransform.position + InstanceSpawnOffset, enemyDir, DamagePerHit, spawnerCollider, CanSplash);
+    public virtual GameObject SpawnBaseProjectile(Transform spawnerTransform, Quaternion enemyDir, Collider spawnerCollider) {
+        return SpawnInstance(spawnerTransform.position + InstanceSpawnOffset, enemyDir, DamagePerHit, spawnerCollider, CanSplash);
     }
 
     /// <summary>

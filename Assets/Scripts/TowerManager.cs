@@ -98,14 +98,16 @@ public class TowerManager : MonoBehaviour {
 
     /// <summary>
     /// Given two towers, will return a <c>ComboTowerController</c> with just these two towers.
-    /// Subsequent towers for 2+ combos should be added using ComboTowerController.AddTowerToCombo()
+    /// Subsequent towers for 2+ combos should be added using <c>ComboTowerController.AddTowerToCombo()</c>
     /// </summary>
     /// <param name="towerController1"></param>
     /// <param name="towerController2"></param>
     /// <returns>The newly created <c>ComboTowerController</c></returns>
     [CanBeNull]
     private ComboTowerController CreateCombo(TowerController towerController1, TowerController towerController2) {
-        ComboTowerController combo = new ComboTowerController(towerController1, towerController2);
+        GameObject comboObj = Instantiate(ReferenceManager.Prefabs.ComboTower, ReferenceManager.ComboParentObject.transform);
+        ComboTowerController combo = comboObj.GetComponent<ComboTowerController>();
+        combo.AddFirstTwoTowers(towerController1, towerController2);
         combos.Add(combo);
 
         controllerToCombo.Add(towerController1, combo);
@@ -122,7 +124,7 @@ public class TowerManager : MonoBehaviour {
     /// <param name="spellMaterial"></param>
     private void UpdateTowerColor(Transform transform, Material spellMaterial) {
         Renderer renderer = transform.GetComponent<Renderer>();
-        if (renderer != null) {
+        if (renderer != null && transform.gameObject.name != "ComboRing") {
             renderer.material = spellMaterial;
         }
 

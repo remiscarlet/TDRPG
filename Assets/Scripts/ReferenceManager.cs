@@ -21,6 +21,7 @@ public class ReferenceManager : MonoBehaviour {
         eventSystemComponent = GameObject.Find("EventSystem").GetComponent<EventSystem>();
         shopMenuRaycastUtilComponent = GameObject.Find("Environment/Shop/Menu").GetComponent<UIRaycasterUtil>();
 
+        comboParentObject = GameObject.Find("Environment/Combos");
         playerObject = GameObject.Find("Player");
         cameraObject = playerObject.transform.Find("Player Head/Main Camera").gameObject;
         playerStateComponent = playerObject.GetComponent<PlayerState>();
@@ -36,6 +37,7 @@ public class ReferenceManager : MonoBehaviour {
     [System.NonSerialized] public EventSystem eventSystemComponent;
     [System.NonSerialized] public UIRaycasterUtil shopMenuRaycastUtilComponent;
 
+    [System.NonSerialized] public GameObject comboParentObject;
     [System.NonSerialized] public GameObject playerObject;
     [System.NonSerialized] public GameObject cameraObject;
     [System.NonSerialized] public PlayerState playerStateComponent;
@@ -60,6 +62,9 @@ public class ReferenceManager : MonoBehaviour {
         get => instance.shopMenuRaycastUtilComponent;
     }
 
+    public static GameObject ComboParentObject {
+        get => instance.comboParentObject;
+    }
     public static GameObject PlayerObject {
         get => instance.playerObject;
     }

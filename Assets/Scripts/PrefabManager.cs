@@ -31,6 +31,11 @@ public class PrefabManager : MonoBehaviour {
         get => magicMissile;
     }
 
+    public GameObject comboTower;
+    public GameObject ComboTower {
+        get => comboTower;
+    }
+
     public GameObject tower;
     public GameObject Tower {
         get => tower;

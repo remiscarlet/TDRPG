@@ -2,17 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using JetBrains.Annotations;
+using Unity.Jobs.LowLevel.Unsafe;
 
-public class ComboTowerController {
+public class ComboTowerController : MonoBehaviour {
     private ComboTypeManager comboTypeManager;
     private ComboType comboType;
+    private GameObject comboTowerTurret;
+    private Collider comboTowerTurretCollider;
 
-    public ComboTowerController(TowerController firstController, TowerController secondController) {
+    private List<TowerController> controllersIncluded;
+    public List<TowerController> GetTowerControllers {
+        get => controllersIncluded;
+    }
+
+    private void Awake() {
         comboTypeManager = ReferenceManager.ComboTypes;
         controllersIncluded = new List<TowerController>();
+        comboTowerTurret = transform.Find("Cone").gameObject;
+        comboTowerTurretCollider = comboTowerTurret.GetComponent<Collider>();
+    }
+
+    public void AddFirstTwoTowers(TowerController firstController, TowerController secondController) {
         AddTowerToCombo(firstController);
         AddTowerToCombo(secondController);
 
@@ -25,12 +39,29 @@ public class ComboTowerController {
     }
 
     public void ComboFixedUpdate() {
+        if (comboType == null) {
+            throw new Exception("Called ComboFixedUpdate() before comboType was defined!");
+        }
+        print($"Running ComboFixedUpdate() on combo {comboType}");
+        Shoot();
         // Generate projectiles for combo type
     }
 
-    private List<TowerController> controllersIncluded;
-    public List<TowerController> GetTowerControllers {
-        get => controllersIncluded;
+    private float lastShotAt = 0.0f;
+    private float GetTimeSinceLastShot() {
+        return Time.time - lastShotAt;
+    }
+
+    private Vector3 projectilePosOffset = Vector3.zero; //new Vector3(-0.039f, -1.15f, 0.05f);
+    private void Shoot() {
+        print(":thinking:");
+        print(comboType.GetWaitTimeBetweenShots());
+        print(GetTimeSinceLastShot());
+        if (comboType.GetWaitTimeBetweenShots() < GetTimeSinceLastShot()) {
+            GameObject enemy = TargetingUtils.GetClosestEnemyInRange(transform, comboType.TowerShotRange);
+            comboType.SpawnBaseProjectile(transform, transform.rotation, comboTowerTurretCollider);
+            lastShotAt = Time.time;
+        }
     }
 
     /// <summary>
