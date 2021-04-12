@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class Spell : Purchaseable {
     public Spell(GameObject prefab) {
@@ -106,8 +108,14 @@ public class Spell : Purchaseable {
     /// <param name="enemyDir"></param>
     /// <param name="spawnerCollider"></param>
     /// <returns></returns>
-    public virtual GameObject SpawnBaseProjectile(Transform spawnerTransform, Quaternion enemyDir, Collider spawnerCollider) {
-        return SpawnInstance(spawnerTransform.position + InstanceSpawnOffset, enemyDir, DamagePerHit, spawnerCollider, CanSplash);
+    public virtual GameObject SpawnBaseProjectile(Transform spawnerTransform, Quaternion? enemyDir, Collider spawnerCollider) {
+        if (enemyDir == null) {
+            throw new Exception("Got null for enemyDir!");
+        }
+
+        // Can't seem to assign directly even with ^? The ?? is technically redundant.
+        Quaternion rotToEnemy = enemyDir ?? default(Quaternion);
+        return SpawnInstance(spawnerTransform.position + InstanceSpawnOffset, rotToEnemy, DamagePerHit, spawnerCollider, CanSplash);
     }
 
     /// <summary>
@@ -122,7 +130,7 @@ public class Spell : Purchaseable {
     /// <param name="canSplash"></param>
     /// <returns>The spawned projectile <c>GameObject</c></returns>
     protected GameObject SpawnInstance(Vector3 spawnLoc, Quaternion spawnRot, float damage, Collider spawnerCollider, bool canSplash) {
-        //Debug.Log($"Spawning: {spawnLoc}, {spawnRot}, {damage}, {shootForce}, {spawnerCollider}");
+        Debug.Log($"Spawning: {spawnLoc}, {spawnRot}, {damage}, {shootForce}, {spawnerCollider}");
         GameObject obj = Object.Instantiate(InstancePrefab, spawnLoc, spawnRot);
         obj.layer = Layers.FriendlyProjectiles;
 

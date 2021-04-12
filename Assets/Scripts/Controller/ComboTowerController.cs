@@ -81,12 +81,9 @@ public class ComboTowerController : MonoBehaviour {
 
     private Vector3 projectilePosOffset = Vector3.zero; //new Vector3(-0.039f, -1.15f, 0.05f);
     private void Shoot() {
-        print(":thinking:");
-        print(comboType.GetWaitTimeBetweenShots());
-        print(GetTimeSinceLastShot());
         if (comboType.GetWaitTimeBetweenShots() < GetTimeSinceLastShot()) {
             GameObject enemy = TargetingUtils.GetClosestEnemyInRange(transform, comboType.TowerShotRange);
-            comboType.SpawnBaseProjectile(transform, transform.rotation, comboTowerTurretCollider);
+            comboType.SpawnBaseProjectile(transform, null, comboTowerTurretCollider);
             lastShotAt = Time.time;
         }
     }

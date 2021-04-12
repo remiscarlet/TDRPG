@@ -24,13 +24,11 @@ public class TowerSlotController : Interactable {
         playerState = ReferenceManager.PlayerStateComponent;
         camera = ReferenceManager.CameraObject;
         towerPrefab = ReferenceManager.Prefabs.Tower;
-        print($"towerPrefab: {towerPrefab}");
         MaxInteractDistance = 20.0f;
 
         foreach (Transform child in transform) {
             // Account for pre-populated towers
             if (child.CompareTag("Tower")) {
-                print("AA123 - IsOccupied is true by via Start()");
                 IsOccupied = true;
             }
         }
@@ -58,11 +56,6 @@ public class TowerSlotController : Interactable {
         if (!IsOccupied && IsBeingLookedAt) {
             ShowSilhouette();
         } else {
-            if (gameObject.name == "TowerSlot1") {
-                print($"IsOccupied: {IsOccupied}");
-                print($"IsBeingLookedAt: {IsBeingLookedAt}");
-            }
-
             HideSilhouette();
         }
     }
@@ -85,7 +78,6 @@ public class TowerSlotController : Interactable {
 
         if (towerManager.CreateTower(equippedAbility, transform)) {
             IsOccupied = true;
-            print("AA234 - Attempted to create tower and set IsOccupied to true.");
         }
     }
 

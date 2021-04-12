@@ -16,6 +16,7 @@ namespace ProjectileAnimations {
             return duration;
         }
 
+
         private Vector3 projectileForceOffset = new Vector3(-2.0f, 2.0f, 0.0f);
         public override bool Animate(float timeSinceProjectileSpawned, Transform projectileTransform, Rigidbody projectileRb) {
             float timeSinceAnimStarted;
@@ -26,11 +27,13 @@ namespace ProjectileAnimations {
                 timeSinceAnimStarted = timeSinceProjectileSpawned - timeAnimStarted;
             }
 
-            //Debug.Log($"Impulse animate: timeSinceAnimStarted {timeSinceAnimStarted}");
+            Debug.Log($"Impulse animate: timeSinceAnimStarted {timeSinceAnimStarted}");
             if (timeSinceAnimStarted >= duration) {
                 return true;
             } else {
-                Vector3 forceDir = projectileTransform.forward + projectileForceOffset;
+                //Vector3 forceDir = (projectileTransform.forward + projectileForceOffset).normalized;
+                Vector3 forceDir = (Quaternion.Euler(-45.0f, 10.0f, 0) * projectileTransform.forward).normalized;
+                Debug.Log($"ForceDir vector: {forceDir}");
                 projectileRb.AddForce(forceDir * impulseForce, ForceMode.Impulse);
                 projectileTransform.rotation = Quaternion.LookRotation(projectileRb.velocity);
             }
