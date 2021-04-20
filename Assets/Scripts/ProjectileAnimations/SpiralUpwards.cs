@@ -33,7 +33,7 @@ namespace ProjectileAnimations {
             } else {
                 //Vector3 forceDir = (projectileTransform.forward + projectileForceOffset).normalized;
                 Vector3 forceDir = (Quaternion.Euler(-45.0f, 10.0f, 0) * projectileTransform.forward).normalized;
-                Debug.Log($"ForceDir vector: {forceDir}");
+                Debug.Log($"ForceDir vector: {forceDir}, trans.fwd: {projectileTransform.forward}");
                 projectileRb.AddForce(forceDir * impulseForce, ForceMode.Impulse);
                 projectileTransform.rotation = Quaternion.LookRotation(projectileRb.velocity);
             }
