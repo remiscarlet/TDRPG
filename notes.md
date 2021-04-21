@@ -11,16 +11,27 @@
     - Clicker/UI Input Delay class for handling "delay repeating keystroke", "pause for .5 seconds on first press, then repeat keystroke every .1 seconds thereafter", etc
     - Items class as a parent of Purchaseable/PlayerAbility? Are purchaseables _all_ items?
     - Inventory class if more than just hotbar? Consumables? Throwables?
-- Better projectile animations, even in beta. Good practice.
+- Better projectile animations
     - Magic missile tower shoots three missiles. One flying center w/ small offset and two going approx 4x 'small' offset out from center. Can also make mm projectiles shoot randomly in xz dir assuming forward is y until some percentage of distance travelled to target relative to init dist from instantiation. After reaching percentage, travel towards target center again but still add on random but lessening xz dir randomization.
     - Each of these "sub animations" should be in their own movements classes. Main projectile animation class loads them in `Start()`. Can program animations in order in projectile anim class with lengths of each anim. Maybe args to the anims to change dir and whatnot - How modular?
     - At this point should prob separate pc and tower projectile animations. Should also prob reorganize classes into folder structure.
 - Why can structs not have unassigned fields? Why is assigning default null not being overriden by Ability setter upon instantiation?
 - Projectile rotation should face velocity vector direction
-- Projectile animations should all have "scaleToDist" arg. Particularly impulsefwd at start for MM animations make less sense the closer the enemy due to the constant impulse force at start causing projectiles against close enemies to overshoot/miss
-- `ComboTower` should probably get upgraded into a class and not a struct `ComboManager`? So many managers...
+- Some projectile animations should have "scaleToDist" arg. Particularly impulsefwd at start for MM animations make less sense the closer the enemy due to the constant impulse force at start causing projectiles against close enemies to overshoot/miss
 - Code organization refactor. Controller, Managers, etc. More/nested folders?
 
+## "Roadmap"/Priorities
+- Get purchased assets working with Unity
+    - Player model
+    - Random gen map/dungeon
+    - Enemy models
+    - Spell icons (Lol can stop plagiarizing DD finally)
+    - Spell anims? Maybe.
+- Should probably make a basic first level prototype soon even with basic geometry
+- Get enemy variety - even three basic types (normal, fast, tank?)
+    - Can start prototyping AI once this is implemented
+- UI/menus
+- Ability to upgrade spells? Techtree?
 
 ## Random Design Thoughts
 - Abilities are bought at the store and can individually be upgraded.
