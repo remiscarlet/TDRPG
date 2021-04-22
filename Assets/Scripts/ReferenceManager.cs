@@ -23,7 +23,7 @@ public class ReferenceManager : MonoBehaviour {
 
         comboParentObject = GameObject.Find("Environment/Combos");
         playerObject = GameObject.Find("Player");
-        cameraObject = playerObject.transform.Find("Player Head/Main Camera").gameObject;
+        cameraObject = playerObject.transform.Find("Dwarf_Orme_Head/Main Camera").gameObject;
         playerStateComponent = playerObject.GetComponent<PlayerState>();
 
         spawnManagerObject = GameObject.Find("SpawnManager");

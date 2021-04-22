@@ -6,7 +6,16 @@ using Random=UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour {
     public float forwardForce;
-    public float runSpeedup = 5.0f;
+    public float jumpForce;
+    public float runSpeedup = 1.75f;
+
+    private bool IsJumping {
+        get { return animator.GetBool("IsJumping"); }
+        set { animator.SetBool("IsJumping", value); }
+    }
+
+    private Animator animator;
+
     private Rigidbody playerRb;
     private GameObject shootingTip;
     private Collider shootingTipCollider;
@@ -22,15 +31,17 @@ public class PlayerController : MonoBehaviour {
         playerState = ReferenceManager.PlayerStateComponent;
         towerManager = ReferenceManager.TowerManagerComponent;
 
+        animator = GetComponent<Animator>();
+
         playerRb = GetComponent<Rigidbody>();
-        shootingTip = GameObject.Find("Shooting Tip");
+        shootingTip = GameObject.Find("Dwarf_Orme_Eyebrows");
         shootingTipCollider = shootingTip.GetComponent<Collider>();
         camera = GameObject.Find("Main Camera");
     }
 
     void FixedUpdate() {
         UpdateMovement();
-        StabilizeTipping();
+        //StabilizeTipping();
         Shoot();
     }
 
@@ -92,6 +103,7 @@ public class PlayerController : MonoBehaviour {
 
     void UpdateMovement() {
         bool isShiftPressed = Input.GetKey(KeyCode.LeftShift);
+        bool isJumpActivated = Input.GetKey(KeyCode.Space);
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
 
@@ -101,6 +113,28 @@ public class PlayerController : MonoBehaviour {
         } else {
             playerRb.AddForce(vInput * forwardForce * transform.forward, ForceMode.Force);
             playerRb.AddForce(hInput * forwardForce * transform.right, ForceMode.Force);
+        }
+
+        animator.SetFloat("Movement Speed", playerRb.velocity.magnitude);
+
+        if (isJumpActivated && !IsJumping) {
+            animator.Play("Jump");
+            playerRb.AddForce(jumpForce * transform.up, ForceMode.Impulse);
+            IsJumping = true;
+        }
+    }
+
+
+    /// <summary>
+    /// Put this in like a PhysicsHelper class or something eventually
+    /// </summary>
+    private float GetVelocityInDirection(Rigidbody rb, Vector3 dirVector) {
+        return Vector3.Dot(rb.velocity, dirVector);
+    }
+
+    private void OnCollisionEnter(Collision collider) {
+        if (collider.gameObject.CompareTag("Ground")) {
+            IsJumping = false;
         }
     }
 
