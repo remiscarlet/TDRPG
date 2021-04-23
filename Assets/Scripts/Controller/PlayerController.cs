@@ -30,18 +30,20 @@ public class PlayerController : MonoBehaviour {
         shopMenuRaycastUtil = ReferenceManager.ShopMenuRaycastUtilComponent;
         playerState = ReferenceManager.PlayerStateComponent;
         towerManager = ReferenceManager.TowerManagerComponent;
+        camera = ReferenceManager.CameraObject;
 
-        animator = GetComponent<Animator>();
+        animator = ReferenceManager.PlayerModelObject.GetComponent<Animator>();
 
         playerRb = GetComponent<Rigidbody>();
+
         shootingTip = GameObject.Find("Dwarf_Orme_Eyebrows");
         shootingTipCollider = shootingTip.GetComponent<Collider>();
-        camera = GameObject.Find("Main Camera");
+
     }
 
     void FixedUpdate() {
         UpdateMovement();
-        //StabilizeTipping();
+        StabilizeTipping();
         Shoot();
     }
 
@@ -107,12 +109,22 @@ public class PlayerController : MonoBehaviour {
         float vInput = Input.GetAxis("Vertical");
         float hInput = Input.GetAxis("Horizontal");
 
-        if (isShiftPressed) {
-            playerRb.AddForce(vInput * runSpeedup * forwardForce * transform.forward, ForceMode.Force);
-            playerRb.AddForce(hInput * runSpeedup * forwardForce * transform.right, ForceMode.Force);
-        } else {
-            playerRb.AddForce(vInput * forwardForce * transform.forward, ForceMode.Force);
-            playerRb.AddForce(hInput * forwardForce * transform.right, ForceMode.Force);
+        if (vInput != 0.0f || hInput != 0.0f) {
+            // If moving
+            if (!IsJumping) {
+                animator.Play("Walk");
+            }
+
+            if (isShiftPressed) {
+                Vector3 vertForce = vInput * runSpeedup * forwardForce * transform.forward;
+                print($"vertForce: {vertForce}");
+                playerRb.AddForce(vertForce, ForceMode.Force);
+                playerRb.AddForce(hInput * runSpeedup * forwardForce * transform.right, ForceMode.Force);
+            }
+            else {
+                playerRb.AddForce(vInput * forwardForce * transform.forward, ForceMode.Force);
+                playerRb.AddForce(hInput * forwardForce * transform.right, ForceMode.Force);
+            }
         }
 
         animator.SetFloat("Movement Speed", playerRb.velocity.magnitude);

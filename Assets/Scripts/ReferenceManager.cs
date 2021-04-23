@@ -22,8 +22,11 @@ public class ReferenceManager : MonoBehaviour {
         shopMenuRaycastUtilComponent = GameObject.Find("Environment/Shop/Menu").GetComponent<UIRaycasterUtil>();
 
         comboParentObject = GameObject.Find("Environment/Combos");
+
+        cameraObject = GameObject.Find("Main Camera");
+
         playerObject = GameObject.Find("Player");
-        cameraObject = playerObject.transform.Find("Dwarf_Orme_Head/Main Camera").gameObject;
+        playerModelObject = playerObject.transform.Find("Dwarf_Orme").gameObject;
         playerStateComponent = playerObject.GetComponent<PlayerState>();
 
         spawnManagerObject = GameObject.Find("SpawnManager");
@@ -40,6 +43,7 @@ public class ReferenceManager : MonoBehaviour {
     [System.NonSerialized] public GameObject comboParentObject;
     [System.NonSerialized] public GameObject playerObject;
     [System.NonSerialized] public GameObject cameraObject;
+    [System.NonSerialized] public GameObject playerModelObject;
     [System.NonSerialized] public PlayerState playerStateComponent;
 
     [System.NonSerialized] public GameObject spawnManagerObject;
@@ -70,6 +74,9 @@ public class ReferenceManager : MonoBehaviour {
     }
     public static GameObject CameraObject {
         get => instance.cameraObject;
+    }
+    public static GameObject PlayerModelObject {
+        get => instance.playerModelObject;
     }
     public static PlayerState PlayerStateComponent {
         get => instance.playerStateComponent;

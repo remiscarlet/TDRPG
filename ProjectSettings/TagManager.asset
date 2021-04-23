@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Interactable
   - Tower
+  - Collide
   layers:
   - Default
   - TransparentFX
@@ -16,20 +17,20 @@ TagManager:
   - 
   - Water
   - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   - Enemy
   - Friendly
   - EnemyProjectiles
   - FriendlyProjectiles
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
   - 
   - 
   - 
